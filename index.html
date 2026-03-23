@@ -1,0 +1,4066 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OnlineGuru - Professional Learning Platform</title>
+    <meta name="description" content="Master new skills with 100+ expert-led courses in programming, data science, and more.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ========================================
+           ONLINE GURU - PROFESSIONAL LEARNING PLATFORM
+           ======================================== */
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        /* ===== VARIABLES ===== */
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+            
+            --radius-sm: 0.375rem;
+            --radius: 0.5rem;
+            --radius-md: 0.75rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+            
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1e293b;
+            --bg-secondary: #0f172a;
+            --bg-tertiary: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border: #475569;
+        }
+
+        /* ===== PAGE-SPECIFIC BACKGROUNDS ===== */
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: var(--transition);
+            position: relative;
+            margin: 0;
+            padding: 0;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.15;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        body.page-home::before {
+            background-image: url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=2070&auto=format&fit=crop');
+        }
+
+        body.page-courses::before,
+        body.page-paid-courses::before {
+            background-image: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=2070&auto=format&fit=crop');
+        }
+
+        body.page-contact::before {
+            background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070&auto=format&fit=crop');
+        }
+
+        body.page-login::before,
+        body.page-register::before {
+            background-image: url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=2070&auto=format&fit=crop');
+        }
+
+        body.page-about::before,
+        body.page-dashboard::before,
+        body.page-course-player::before {
+            display: none;
+        }
+
+        #app {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+            background: transparent;
+        }
+
+        /* ===== LOADER ===== */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader-content {
+            text-align: center;
+            color: white;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-primary);
+            border-bottom: 2px solid var(--primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        [data-theme="dark"] .header {
+            background: var(--bg-primary);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+            cursor: pointer;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .auth-buttons,
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-icon:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* ===== MOBILE TOGGLE ===== */
+        .mobile-toggle {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius);
+            border: none;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* ===== CARD STYLES ===== */
+        .glass-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            animation: slideUp 1s ease;
+            background: var(--bg-primary);
+            padding: 2.5rem;
+            border-radius: var(--radius-xl);
+            border: 2px solid var(--primary);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ===== GRID LAYOUTS ===== */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem 0;
+        }
+
+        /* ===== COURSE CARDS ===== */
+        .course-card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+        }
+
+        .course-thumbnail {
+            position: relative;
+            height: 180px;
+            overflow: hidden;
+            border-bottom: 3px solid var(--primary);
+            flex-shrink: 0;
+        }
+
+        .course-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .course-card:hover .course-thumbnail img {
+            transform: scale(1.05);
+        }
+
+        .playlist-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary);
+            color: white;
+            padding: 4px 8px;
+            border-radius: var(--radius);
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: var(--shadow-md);
+            z-index: 2;
+        }
+
+        .paid-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 4px 8px;
+            border-radius: var(--radius);
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: var(--shadow-md);
+            z-index: 2;
+        }
+
+        .paid-badge i {
+            font-size: 0.6rem;
+        }
+
+        .course-content {
+            padding: 1.25rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .course-category {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: var(--radius);
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            align-self: flex-start;
+        }
+
+        .course-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 3rem;
+        }
+
+        .course-instructor {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .course-instructor i {
+            color: var(--primary);
+        }
+
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding: 0.5rem 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .stars {
+            color: #fbbf24;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        .course-level {
+            background: var(--bg-tertiary);
+            padding: 3px 8px;
+            border-radius: var(--radius);
+            font-size: 0.7rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .course-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .course-price small {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: normal;
+        }
+
+        .course-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .course-duration {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .purchase-btn {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .purchase-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            background: linear-gradient(135deg, #d97706, #b45309);
+        }
+
+        /* ===== COURSE PLAYER PAGE ===== */
+        .course-player-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .course-player-grid {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 2rem;
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            border: 2px solid var(--primary);
+        }
+
+        .video-section {
+            padding: 2rem;
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            background: #000;
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .course-info {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .course-info h1 {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            color: var(--primary);
+            line-height: 1.3;
+        }
+
+        .course-info .instructor {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .course-info .description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .progress-info {
+            background: var(--bg-secondary);
+            padding: 1.25rem;
+            border-radius: var(--radius);
+            margin: 1.5rem 0;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .progress-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .progress-percentage {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .mark-complete-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .mark-complete-btn:hover:not(:disabled) {
+            background: #0ca678;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .mark-complete-btn:disabled {
+            background: var(--border);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .mark-complete-btn i {
+            font-size: 1.1rem;
+        }
+
+        .playlist-section {
+            background: var(--bg-secondary);
+            border-left: 2px solid var(--border);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .playlist-header {
+            padding: 1.5rem;
+            background: var(--primary);
+            color: white;
+        }
+
+        .playlist-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .playlist-header p {
+            margin: 0.5rem 0 0;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .playlist-items {
+            flex: 1;
+            overflow-y: auto;
+            max-height: 600px;
+            padding: 1rem;
+        }
+
+        .playlist-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-primary);
+            border-radius: var(--radius);
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .playlist-item:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateX(5px);
+            border-color: var(--primary);
+        }
+
+        .playlist-item.completed {
+            border-left: 4px solid var(--success);
+        }
+
+        .playlist-item.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .playlist-item-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .playlist-item:hover .playlist-item-number,
+        .playlist-item.active .playlist-item-number {
+            background: white;
+            color: var(--primary);
+        }
+
+        .playlist-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .playlist-item-info h4 {
+            margin: 0 0 0.25rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .playlist-item-info p {
+            font-size: 0.75rem;
+            margin: 0;
+            opacity: 0.8;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .playlist-item-duration {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .playlist-item-status {
+            margin-left: 0.5rem;
+            color: var(--success);
+        }
+
+        .playlist-item.completed .playlist-item-status i {
+            color: var(--success);
+        }
+
+        /* ===== DASHBOARD GRID ===== */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: calc(100vh - 80px);
+            background: #f8f9fa;
+        }
+
+        .dashboard-sidebar {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 2rem 1.5rem;
+            color: white;
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+            border-right: 2px solid var(--primary);
+        }
+
+        .sidebar-header {
+            text-align: center;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .user-avatar-large {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 3rem;
+            color: var(--primary);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .user-info h3 {
+            margin: 0 0 0.25rem 0;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .user-info p {
+            margin: 0;
+            color: rgba(255,255,255,0.9);
+            font-size: 0.9rem;
+        }
+
+        .sidebar-nav {
+            margin-top: 2rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: var(--radius);
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            transition: var(--transition);
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .dashboard-content {
+            padding: 2rem;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+        }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: var(--radius);
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .stat-info h3 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .stat-info p {
+            color: var(--text-secondary);
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* ===== FORMS ===== */
+        .auth-form {
+            max-width: 450px;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            border: 2px solid var(--primary);
+        }
+
+        .auth-form h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.2rem;
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: var(--transition);
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .auth-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        .auth-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* ===== FILTER BUTTONS ===== */
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--text-primary);
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* ===== SEARCH ===== */
+        .search-container {
+            position: relative;
+            max-width: 500px;
+            margin: 0 auto 2rem;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            z-index: 1;
+        }
+
+        #search-courses {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+            border: 2px solid var(--primary);
+            box-sizing: border-box;
+        }
+
+        #search-courses:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        /* ===== PROGRESS BARS ===== */
+        .progress-bar {
+            height: 10px;
+            background: var(--border);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 5px;
+            transition: width 0.8s ease;
+        }
+
+        /* ===== ACTIVITY FEED ===== */
+        .activity-feed {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feed-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .feed-item:last-child {
+            border-bottom: none;
+        }
+
+        .feed-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .feed-content {
+            flex: 1;
+        }
+
+        .feed-content p {
+            margin: 0 0 0.25rem 0;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .feed-time {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== PAYMENT MODAL ===== */
+        .payment-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+
+        .payment-modal-content {
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.3s ease;
+            border: 2px solid var(--primary);
+        }
+
+        .payment-modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        }
+
+        .payment-modal-header i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .payment-modal-header h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .payment-body {
+            padding: 2rem;
+        }
+
+        .payment-summary {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            border: 2px dashed var(--primary);
+            margin-bottom: 2rem;
+        }
+
+        .payment-summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem 0;
+            color: var(--text-primary);
+        }
+
+        .payment-summary-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--border);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .payment-form .form-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .payment-form .form-section h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .payment-form .form-section h3 i {
+            color: var(--primary);
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .payment-method {
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .payment-method:hover,
+        .payment-method.selected {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .payment-method i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .payment-method span {
+            display: block;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .bank-details {
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        .bank-details.show {
+            display: block;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .payment-terms {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .payment-terms label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .payment-terms input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+
+        .payment-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .payment-actions button {
+            flex: 1;
+            padding: 1rem;
+        }
+
+        /* ===== PURCHASE HISTORY ===== */
+        .purchase-history {
+            margin-top: 2rem;
+        }
+
+        .purchase-item {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.25rem;
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-md);
+        }
+
+        .purchase-item:hover {
+            transform: translateX(5px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .purchase-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .purchase-details {
+            flex: 1;
+        }
+
+        .purchase-details h4 {
+            margin: 0 0 0.5rem 0;
+            color: var(--text-primary);
+        }
+
+        .purchase-meta {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .purchase-amount {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .purchase-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-success {
+            background: #10b981;
+            color: white;
+        }
+
+        /* ===== NOTIFICATIONS ===== */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-primary);
+            border-radius: var(--radius);
+            padding: 1rem 1.5rem;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 10000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            max-width: 400px;
+            border-left: 4px solid;
+            border: 2px solid var(--primary);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-success {
+            border-left-color: var(--success);
+        }
+
+        .notification-error {
+            border-left-color: var(--danger);
+        }
+
+        .notification-warning {
+            border-left-color: var(--warning);
+        }
+
+        .notification-info {
+            border-left-color: var(--info);
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            margin-left: auto;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+            color: var(--text-secondary);
+        }
+
+        .notification-close:hover {
+            opacity: 1;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: var(--bg-primary);
+            border-top: 3px solid var(--primary);
+            margin-top: 4rem;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer-grid {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            padding: 3rem 2rem;
+        }
+
+        .footer-col h4 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+
+        .text-center {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border);
+            font-weight: 500;
+        }
+
+        /* ===== BACK BUTTON ===== */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+        }
+
+        .back-btn:hover {
+            color: var(--primary);
+            transform: translateX(-5px);
+            border-color: var(--primary);
+        }
+
+        .back-btn i {
+            font-size: 0.9rem;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .course-player-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .playlist-section {
+                border-left: none;
+                border-top: 2px solid var(--border);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--bg-primary);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.5rem;
+                border-bottom: 3px solid var(--primary);
+                box-shadow: var(--shadow-lg);
+            }
+            
+            .nav-links.mobile-open {
+                display: flex;
+            }
+            
+            .mobile-toggle {
+                display: flex;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-content {
+                padding: 1.5rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-sidebar {
+                position: fixed;
+                left: -300px;
+                top: 80px;
+                width: 280px;
+                transition: left 0.3s ease;
+                z-index: 90;
+                box-shadow: var(--shadow-xl);
+            }
+            
+            .dashboard-sidebar.active {
+                left: 0;
+            }
+            
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+            
+            .payment-actions {
+                flex-direction: column;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .course-player-container {
+                padding: 1rem;
+            }
+            
+            .video-section {
+                padding: 1rem;
+            }
+            
+            .course-info h1 {
+                font-size: 1.5rem;
+            }
+            
+            .purchase-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .purchase-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+            
+            .hero-content {
+                padding: 1.5rem;
+            }
+            
+            .section-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .filter-buttons {
+                flex-direction: column;
+            }
+            
+            .filter-btn {
+                width: 100%;
+            }
+            
+            .course-footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .purchase-btn, .btn-primary {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .notification {
+                left: 20px;
+                right: 20px;
+                max-width: none;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-card {
+                padding: 1rem;
+            }
+        }
+
+        /* ===== CHATBOT STYLES ===== */
+        .chatbot-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow-xl);
+            transition: var(--transition);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .chatbot-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+        }
+
+        .chatbot-window {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 380px;
+            height: 550px;
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1000;
+            transform: scale(0);
+            opacity: 0;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary);
+        }
+
+        .chatbot-window.open {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .close-chat {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .close-chat:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            display: flex;
+            gap: 0.5rem;
+            animation: slideUp 0.3s ease;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .message.user .message-avatar {
+            background: var(--primary);
+            color: white;
+            order: 1;
+        }
+
+        .message.bot .message-avatar {
+            background: var(--bg-tertiary);
+            color: var(--primary);
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            word-wrap: break-word;
+        }
+
+        .message.user .message-content {
+            background: var(--primary);
+            color: white;
+        }
+
+        .message.bot .message-content {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 0.3rem;
+            padding: 0.75rem;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius);
+            width: fit-content;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .chat-input-area {
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: inherit;
+            resize: none;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .send-btn {
+            padding: 0.75rem 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .send-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .chatbot-window {
+                width: calc(100vw - 40px);
+                height: 500px;
+                right: 20px;
+                bottom: 80px;
+            }
+            
+            .chatbot-btn {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body class="page-home">
+    <div id="app">
+        <div class="loader">
+            <div class="loader-content">
+                <div class="spinner"></div>
+                <p>Loading OnlineGuru...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // ONLINE GURU - PROFESSIONAL LEARNING PLATFORM
+        // ========================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        const App = {
+            user: null,
+            theme: 'light',
+            currentPage: 'home',
+            currentCourse: null,
+            currentLesson: 0,
+            courses: [],
+            paidCourses: [],
+            enrollments: [],
+            purchases: [],
+            progress: {},
+            certificates: [],
+            activities: [],
+            lessons: [
+                { id: 1, title: 'Introduction to the Course', duration: '10:30', description: 'Overview of what you will learn', videoId: null },
+                { id: 2, title: 'Getting Started with Basics', duration: '15:45', description: 'Fundamental concepts and setup', videoId: null },
+                { id: 3, title: 'Core Concepts Explained', duration: '20:15', description: 'Deep dive into essential topics', videoId: null },
+                { id: 4, title: 'Hands-on Practice Session', duration: '25:30', description: 'Practical examples and exercises', videoId: null },
+                { id: 5, title: 'Advanced Techniques', duration: '18:20', description: 'Take your skills to the next level', videoId: null },
+                { id: 6, title: 'Real-world Applications', duration: '22:10', description: 'Apply what you learned', videoId: null },
+                { id: 7, title: 'Best Practices and Tips', duration: '16:40', description: 'Industry standards', videoId: null },
+                { id: 8, title: 'Project Work', duration: '30:00', description: 'Build a complete project', videoId: null },
+                { id: 9, title: 'Testing and Debugging', duration: '19:25', description: 'Learn to test your code', videoId: null },
+                { id: 10, title: 'Final Review', duration: '12:15', description: 'Course summary', videoId: null }
+            ]
+        };
+
+        // Your existing JavaScript code continues here...
+        // (All your existing functions: initializeApp, hideLoader, loadCourses, etc.)
+        // I'm keeping them exactly as they are in your original code
+
+        function initializeApp() {
+            loadCourses();
+            loadPaidCourses();
+            loadTheme();
+            checkAuth();
+            setupEventListeners();
+            render();
+            hideLoader();
+        }
+
+        function hideLoader() {
+            setTimeout(() => {
+                const loader = document.querySelector('.loader');
+                if (loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                    }, 300);
+                }
+            }, 500);
+        }
+
+        function loadCourses() {
+            App.courses = [
+                { id: 1, title: 'Complete Python Course by Shradha Khapra', instructor: 'Shradha Khapra', category: 'Python', rating: 4.9, students: 125000, duration: '12 weeks', lessons: 60, level: 'Beginner', videoId: 't2_Q2BRzeEE', description: 'Complete Python programming course from basics to advanced concepts with practical examples and projects.', price: 0, type: 'free' },
+                { id: 2, title: 'Python Programming by Telusko', instructor: 'Telusko', category: 'Python', rating: 4.8, students: 98000, duration: '10 weeks', lessons: 45, level: 'Beginner', videoId: 'QXeEoD0pB3E', description: 'Learn Python programming with practical examples and real-world applications.', price: 0, type: 'free' },
+                { id: 3, title: 'Python Course by CODE WITH HURRY', instructor: 'CODE WITH HURRY', category: 'Python', rating: 4.7, students: 76000, duration: '8 weeks', lessons: 40, level: 'Beginner', videoId: '7wnove7K-ZQ', description: 'Complete Python programming course with hands-on coding examples.', price: 0, type: 'free' },
+                { id: 4, title: 'Python by Engineering in Kannada', instructor: 'Engineering in Kannada', category: 'Python', rating: 4.6, students: 52000, duration: '6 weeks', lessons: 30, level: 'Beginner', videoId: '8c74mXV2lJ0', description: 'Learn Python programming with clear explanations and practical examples.', price: 0, type: 'free' },
+                { id: 5, title: 'Python by Jenny\'s Lectures', instructor: 'Jenny\'s Lectures CS IT', category: 'Python', rating: 4.8, students: 89000, duration: '9 weeks', lessons: 42, level: 'Beginner', videoId: '6i3EGqOBRiU', description: 'Comprehensive Python programming course with detailed explanations.', price: 0, type: 'free' },
+                { id: 6, title: 'Python for Data Science', instructor: 'Data with Baraa', category: 'Python', rating: 4.7, students: 67000, duration: '8 weeks', lessons: 35, level: 'Intermediate', videoId: 'Rq5gJVxz55Q', description: 'Python programming focused on data science applications.', price: 0, type: 'free' },
+                { id: 7, title: 'Advanced Python by Telusko', instructor: 'Telusko', category: 'Python', rating: 4.9, students: 112000, duration: '10 weeks', lessons: 48, level: 'Advanced', videoId: 'YZkyL-f-YXY', description: 'Advanced Python concepts and professional programming techniques.', price: 0, type: 'free' },
+                { id: 8, title: 'Python Certification by Simplilearn', instructor: 'Simplilearn', category: 'Python', rating: 4.6, students: 78000, duration: '12 weeks', lessons: 55, level: 'Intermediate', videoId: 'Onjs26YvfIQ', description: 'Professional Python certification course with industry projects.', price: 0, type: 'free' },
+                { id: 9, title: 'Web Development by Apna College', instructor: 'Apna College', category: 'Web Development', rating: 4.8, students: 145000, duration: '12 weeks', lessons: 65, level: 'Beginner', videoId: 'l1EssrLxt7E', description: 'Complete web development course with HTML, CSS, JavaScript, and modern frameworks.', price: 0, type: 'free' },
+                { id: 10, title: 'Web Dev by CODE WITH HURRY', instructor: 'CODE WITH HURRY', category: 'Web Development', rating: 4.7, students: 98000, duration: '10 weeks', lessons: 50, level: 'Beginner', videoId: 'tVzUXW6siu0', description: 'Master web development with practical projects and real-world applications.', price: 0, type: 'free' },
+                { id: 11, title: 'Web Dev by CodeHelp', instructor: 'CodeHelp by Babbar', category: 'Web Development', rating: 4.9, students: 187000, duration: '14 weeks', lessons: 70, level: 'Beginner', videoId: 'Vi9bxu-M-ag', description: 'Complete web development bootcamp with modern technologies and best practices.', price: 0, type: 'free' },
+                { id: 12, title: 'Web Dev by CODER ARMY', instructor: 'CODER ARMY', category: 'Web Development', rating: 4.6, students: 76000, duration: '8 weeks', lessons: 40, level: 'Beginner', videoId: '1pcikNlDB-4', description: 'Learn web development with hands-on coding and practical examples.', price: 0, type: 'free' },
+                { id: 13, title: 'Web Dev by STP', instructor: 'STP Computer Education', category: 'Web Development', rating: 4.5, students: 65000, duration: '10 weeks', lessons: 45, level: 'Beginner', videoId: 'EtbgxOeYR54', description: 'Complete web development course with frontend and backend technologies.', price: 0, type: 'free' },
+                { id: 14, title: 'Web Dev by EDUREKA', instructor: 'EDUREKA', category: 'Web Development', rating: 4.7, students: 112000, duration: '12 weeks', lessons: 60, level: 'Intermediate', videoId: 'Q33KBiDriJY', description: 'Professional web development with advanced frameworks and real projects.', price: 0, type: 'free' },
+                { id: 15, title: 'Web Dev by freeCodeCamp', instructor: 'freeCodeCamp.org', category: 'Web Development', rating: 4.8, students: 234000, duration: '16 weeks', lessons: 80, level: 'Beginner', videoId: 'dX8396ZmSPk', description: 'Comprehensive web development course covering HTML, CSS, JavaScript, React, Node.js and more.', price: 0, type: 'free' },
+                { id: 16, title: 'Advanced Web Dev by Apna College', instructor: 'Apna College', category: 'Web Development', rating: 4.6, students: 89000, duration: '10 weeks', lessons: 48, level: 'Advanced', videoId: 'ESnrn1kAD4E', description: 'Advanced web development with modern frameworks and production techniques.', price: 0, type: 'free' },
+                { id: 17, title: 'Web Dev by MicroDegree', instructor: 'MicroDegree ಕನ್ನಡ', category: 'Web Development', rating: 4.5, students: 54000, duration: '8 weeks', lessons: 35, level: 'Intermediate', videoId: 'y6fzqBsi1-Y', description: 'Professional web development with practical projects and industry standards.', price: 0, type: 'free' },
+                { id: 18, title: 'Web Dev by TECHNOGURU', instructor: 'TECHNOGURU AMIT', category: 'Web Development', rating: 4.7, students: 78000, duration: '12 weeks', lessons: 55, level: 'Intermediate', videoId: 'hpMIQ1lM3Fs', description: 'Complete web development with modern tools and professional practices.', price: 0, type: 'free' },
+                { id: 19, title: 'Data Science by Edureka', instructor: 'Edureka', category: 'Data Science', rating: 4.7, students: 156000, duration: '12 weeks', lessons: 60, level: 'Beginner', videoId: 'xPh5ihBWang', description: 'Complete data science course with Python, statistics, and machine learning fundamentals.', price: 0, type: 'free' },
+                { id: 20, title: 'Data Science by Mosh', instructor: 'Programming with Mosh', category: 'Data Science', rating: 4.8, students: 234000, duration: '10 weeks', lessons: 50, level: 'Beginner', videoId: '9R3X0JoCLyU', description: 'Learn data science with Python, pandas, NumPy, and practical examples.', price: 0, type: 'free' },
+                { id: 21, title: 'Data Science by Simplilearn', instructor: 'Simplilearn', category: 'Data Science', rating: 4.6, students: 189000, duration: '14 weeks', lessons: 70, level: 'Intermediate', videoId: 'QISvmiwOIYI', description: 'Professional data science course with advanced analytics and ML techniques.', price: 0, type: 'free' },
+                { id: 22, title: 'Data Science by Apna College', instructor: 'Apna College and Shradha Khapra', category: 'Data Science', rating: 4.9, students: 267000, duration: '16 weeks', lessons: 80, level: 'Beginner', videoId: 'sWhqqiJuypA', description: 'Complete data science bootcamp with real-world projects and industry applications.', price: 0, type: 'free' },
+                { id: 23, title: 'Data Science by Intellipaat', instructor: 'Intellipaat', category: 'Data Science', rating: 4.5, students: 145000, duration: '12 weeks', lessons: 55, level: 'Intermediate', videoId: 'a5KmkeQ714k', description: 'Comprehensive data science training with hands-on projects and certification.', price: 0, type: 'free' },
+                { id: 24, title: 'Data Science by WsCube', instructor: 'WsCube Tech', category: 'Data Science', rating: 4.4, students: 98000, duration: '10 weeks', lessons: 45, level: 'Beginner', videoId: 'gDZ6czwuQ18', description: 'Learn data science fundamentals with practical examples and case studies.', price: 0, type: 'free' },
+                { id: 25, title: 'Advanced Data Science', instructor: 'WsCube Tech', category: 'Data Science', rating: 4.6, students: 76000, duration: '12 weeks', lessons: 50, level: 'Advanced', videoId: 'mGJusQ7iBwc', description: 'Advanced data science with deep learning and big data technologies.', price: 0, type: 'free' },
+                { id: 26, title: 'Data Science by GREATE', instructor: 'GREATE LEARNIBG', category: 'Data Science', rating: 4.3, students: 65000, duration: '8 weeks', lessons: 35, level: 'Intermediate', videoId: 'N2UPlYHmvmk', description: 'Data science course with focus on practical applications and industry tools.', price: 0, type: 'free' },
+                { id: 27, title: 'Data Science by Nishant', instructor: 'Nishant Chahar', category: 'Data Science', rating: 4.5, students: 89000, duration: '10 weeks', lessons: 48, level: 'Intermediate', videoId: '05IST7Q1MXY', description: 'Complete data science course with Python, ML, and data visualization.', price: 0, type: 'free' },
+                { id: 28, title: 'Data Science Mastery', instructor: 'Intellipaat', category: 'Data Science', rating: 4.7, students: 178000, duration: '14 weeks', lessons: 65, level: 'Advanced', videoId: 'KZgd2UiapE0', description: 'Advanced data science with AI, ML, and big data analytics.', price: 0, type: 'free' },
+                { id: 29, title: 'SAP by ZaranTech', instructor: 'ZaranTech DotCom', category: 'SAP', rating: 4.6, students: 89000, duration: '12 weeks', lessons: 55, level: 'Beginner', videoId: 'zF8S1Jp3hfE', description: 'Complete SAP course with modules, configuration, and practical implementation.', price: 0, type: 'free' },
+                { id: 30, title: 'SAP by Account Expert', instructor: 'Account Expert', category: 'SAP', rating: 4.7, students: 112000, duration: '10 weeks', lessons: 45, level: 'Intermediate', videoId: 'iaD-pyE03lc', description: 'Professional SAP training with finance modules and real-world scenarios.', price: 0, type: 'free' },
+                { id: 31, title: 'SAP by freeCodeCamp', instructor: 'freeCodeCamp.org', category: 'SAP', rating: 4.8, students: 156000, duration: '14 weeks', lessons: 65, level: 'Beginner', videoId: 'C9cK2Z2JDLg', description: 'Comprehensive SAP course with hands-on projects and certification preparation.', price: 0, type: 'free' },
+                { id: 32, title: 'SAP by Code With Amrit', instructor: 'Code With Amrit', category: 'SAP', rating: 4.5, students: 76000, duration: '8 weeks', lessons: 35, level: 'Beginner', videoId: 'qmT-wjyzkTo', description: 'Learn SAP fundamentals with practical examples and industry applications.', price: 0, type: 'free' },
+                { id: 33, title: 'SAP Fundamentals', instructor: 'SAP', category: 'SAP', rating: 4.4, students: 65000, duration: '6 weeks', lessons: 25, level: 'Beginner', videoId: 'nH45rXx4jD0', description: 'Complete SAP fundamentals course with core modules and configuration.', price: 0, type: 'free' },
+                { id: 34, title: 'SAP by Intellipaat', instructor: 'Intellipaat', category: 'SAP', rating: 4.6, students: 98000, duration: '10 weeks', lessons: 40, level: 'Intermediate', videoId: 'Tb2zZ8AKftY', description: 'Professional SAP training with advanced modules and implementation.', price: 0, type: 'free' },
+                { id: 35, title: 'SAP for Beginners', instructor: 'SAP4BEGINNERS', category: 'SAP', rating: 4.7, students: 134000, duration: '12 weeks', lessons: 50, level: 'Beginner', videoId: 'jxCoY7tHkRU', description: 'Complete SAP course for beginners with step-by-step learning.', price: 0, type: 'free' },
+                { id: 36, title: 'SAP by ERP is easy', instructor: 'ERP is easy', category: 'SAP', rating: 4.5, students: 78000, duration: '8 weeks', lessons: 35, level: 'Intermediate', videoId: '1jFQMadZLfs', description: 'Learn SAP with practical examples and real-world business scenarios.', price: 0, type: 'free' },
+                { id: 37, title: 'SAP by Zell Education', instructor: 'Zell Education', category: 'SAP', rating: 4.6, students: 89000, duration: '10 weeks', lessons: 45, level: 'Advanced', videoId: 'bVmOu9bzu54', description: 'Advanced SAP course with enterprise-level implementation and optimization.', price: 0, type: 'free' },
+                { id: 38, title: 'SAP by STUDY POINT', instructor: 'STUDY POINT & CAREER-RAIPUR', category: 'SAP', rating: 4.4, students: 54000, duration: '12 weeks', lessons: 55, level: 'Intermediate', videoId: 'eJagxXMPINw', description: 'Comprehensive SAP training with certification preparation and job placement.', price: 0, type: 'free' },
+                { id: 39, title: 'App Dev by WsCube', instructor: 'WsCube Tech', category: 'App Development', rating: 4.6, students: 89000, duration: '12 weeks', lessons: 55, level: 'Beginner', videoId: 'FlBhpm9aRUg', description: 'Complete app development course with modern frameworks and practical projects.', price: 0, type: 'free' },
+                { id: 40, title: 'App Dev by SCALER', instructor: 'SCALER', category: 'App Development', rating: 4.7, students: 112000, duration: '14 weeks', lessons: 65, level: 'Intermediate', videoId: 'BxM2DayeOBE', description: 'Professional app development with advanced concepts and industry projects.', price: 0, type: 'free' },
+                { id: 41, title: 'App Dev by Mosh', instructor: 'Programming with Mosh', category: 'App Development', rating: 4.8, students: 156000, duration: '10 weeks', lessons: 45, level: 'Beginner', videoId: 'yye7rSsiV6k', description: 'Learn app development with best practices and modern technologies.', price: 0, type: 'free' },
+                { id: 42, title: 'App Dev by Apna College', instructor: 'Apna College', category: 'App Development', rating: 4.9, students: 234000, duration: '16 weeks', lessons: 75, level: 'Beginner', videoId: '7nQsQ0rvYqQ', description: 'Complete app development bootcamp with real-world applications and deployment.', price: 0, type: 'free' },
+                { id: 43, title: 'App Dev by Philipp', instructor: 'Philipp Lackner', category: 'App Development', rating: 4.7, students: 134000, duration: '12 weeks', lessons: 55, level: 'Advanced', videoId: 'dzUc9vrsldM', description: 'Advanced app development with modern Android and iOS techniques.', price: 0, type: 'free' },
+                { id: 44, title: 'Advanced App Dev', instructor: 'SCALER', category: 'App Development', rating: 4.6, students: 98000, duration: '10 weeks', lessons: 48, level: 'Advanced', videoId: 'mOYN9HlfTgo', description: 'Advanced app development with enterprise-level applications and optimization.', price: 0, type: 'free' },
+                { id: 45, title: 'App Dev by JS Mastery', instructor: 'JavaScript Mastery', category: 'App Development', rating: 4.8, students: 178000, duration: '12 weeks', lessons: 60, level: 'Intermediate', videoId: 'BTfcnxXevm0', description: 'Master app development with JavaScript frameworks and modern tools.', price: 0, type: 'free' },
+                { id: 46, title: 'App Dev by Rivaan', instructor: 'Rivaan Ranawat', category: 'App Development', rating: 4.5, students: 76000, duration: '8 weeks', lessons: 35, level: 'Intermediate', videoId: 'CzRQ9mnmh44', description: 'Professional app development with practical projects and industry standards.', price: 0, type: 'free' },
+                { id: 47, title: 'App Dev Mastery', instructor: 'WsCube Tech', category: 'App Development', rating: 4.7, students: 89000, duration: '14 weeks', lessons: 65, level: 'Advanced', videoId: 'lFguWR9uMD0', description: 'Advanced app development with cutting-edge technologies and best practices.', price: 0, type: 'free' },
+                { id: 48, title: 'App Dev by Dr. Zeeshan', instructor: 'Code with Dr. Zeeshan Bhatti', category: 'App Development', rating: 4.6, students: 65000, duration: '10 weeks', lessons: 45, level: 'Intermediate', videoId: 'jniJeamcIUU', description: 'Complete app development course with focus on practical implementation.', price: 0, type: 'free' },
+                { id: 49, title: 'App Dev by Chris', instructor: 'CodeWithChris', category: 'App Development', rating: 4.8, students: 145000, duration: '12 weeks', lessons: 55, level: 'Beginner', videoId: 'jniJeamcIUU', description: 'Learn app development from scratch with professional guidance and projects.', price: 0, type: 'free' },
+                { id: 50, title: 'AI & ML by EDUREKA', instructor: 'EDUREKA', category: 'AI & ML', rating: 4.7, students: 156000, duration: '14 weeks', lessons: 65, level: 'Beginner', videoId: 'EHBNe31y65s', description: 'Complete AI & ML course with fundamentals, algorithms, and practical applications.', price: 0, type: 'free' },
+                { id: 51, title: 'AI & ML by Intellipaat', instructor: 'Intellipaat', category: 'AI & ML', rating: 4.6, students: 134000, duration: '12 weeks', lessons: 55, level: 'Intermediate', videoId: 'W7N6LPp0SmY', description: 'Professional AI & ML training with deep learning and neural networks.', price: 0, type: 'free' },
+                { id: 52, title: 'AI & ML by Apna College', instructor: 'Apna College and Shradha Khapra', category: 'AI & ML', rating: 4.9, students: 267000, duration: '16 weeks', lessons: 75, level: 'Beginner', videoId: 'qvUxG2a8QHs', description: 'Complete AI & ML bootcamp with real-world projects and industry applications.', price: 0, type: 'free' },
+                { id: 53, title: 'AI & ML by MicroDegree', instructor: 'MicroDegree ಕನ್ನಡ', category: 'AI & ML', rating: 4.5, students: 76000, duration: '10 weeks', lessons: 45, level: 'Beginner', videoId: 'KpiSRshpIy0', description: 'Learn AI & ML fundamentals with practical examples and case studies.', price: 0, type: 'free' },
+                { id: 54, title: 'AI & ML by WsCube', instructor: 'WsCube Tech', category: 'AI & ML', rating: 4.6, students: 98000, duration: '12 weeks', lessons: 55, level: 'Intermediate', videoId: 'LvC68w9JS4Y', description: 'Comprehensive AI & ML course with machine learning algorithms and applications.', price: 0, type: 'free' },
+                { id: 55, title: 'Advanced AI & ML', instructor: 'Intellipaat', category: 'AI & ML', rating: 4.7, students: 112000, duration: '14 weeks', lessons: 65, level: 'Advanced', videoId: 'mULvGdqFKEY', description: 'Advanced AI & ML with deep learning, computer vision, and NLP.', price: 0, type: 'free' },
+                { id: 56, title: 'AI & ML Mastery', instructor: 'Intellipaat', category: 'AI & ML', rating: 4.8, students: 145000, duration: '16 weeks', lessons: 75, level: 'Advanced', videoId: 'tzzz8w53FV4', description: 'Master AI & ML with cutting-edge technologies and enterprise applications.', price: 0, type: 'free' },
+                { id: 57, title: 'AI & ML by Sheryians', instructor: 'Sheryians AI School', category: 'AI & ML', rating: 4.7, students: 89000, duration: '12 weeks', lessons: 55, level: 'Intermediate', videoId: '1L420xXpDTg', description: 'Professional AI & ML training with focus on practical implementation.', price: 0, type: 'free' },
+                { id: 58, title: 'AI & ML by freeCodeCamp', instructor: 'freeCodeCamp.org', category: 'AI & ML', rating: 4.8, students: 189000, duration: '18 weeks', lessons: 85, level: 'Beginner', videoId: 'mEsleV16qdo', description: 'Complete AI & ML bootcamp with hands-on projects and certification.', price: 0, type: 'free' },
+                { id: 59, title: 'AI & ML Professional', instructor: 'Intellipaat', category: 'AI & ML', rating: 4.6, students: 123000, duration: '14 weeks', lessons: 65, level: 'Advanced', videoId: 'FP9kL-_k5Ys', description: 'Professional AI & ML course with industry projects and job placement.', price: 0, type: 'free' },
+                { id: 60, title: 'DSA by Mosh', instructor: 'Programming with Mosh', category: 'Data Structures', rating: 4.8, students: 178000, duration: '12 weeks', lessons: 55, level: 'Intermediate', videoId: 'BBpAmxU_NQo', description: 'Complete data structures and algorithms course with practical examples and implementations.', price: 0, type: 'free' },
+                { id: 61, title: 'DSA by freeCodeCamp', instructor: 'freeCodeCamp.org', category: 'Data Structures', rating: 4.9, students: 234000, duration: '14 weeks', lessons: 65, level: 'Beginner', videoId: '8hly31xKli0', description: 'Comprehensive data structures and algorithms bootcamp with hands-on coding exercises.', price: 0, type: 'free' },
+                { id: 62, title: 'DSA by Jenny', instructor: 'Jenny\'s Lectures CS IT', category: 'Data Structures', rating: 4.7, students: 156000, duration: '10 weeks', lessons: 45, level: 'Intermediate', videoId: 'AT14lCXuMKI', description: 'Professional data structures and algorithms training with detailed explanations.', price: 0, type: 'free' },
+                { id: 63, title: 'DSA by College Wallah', instructor: 'College Wallah', category: 'Data Structures', rating: 4.6, students: 134000, duration: '12 weeks', lessons: 55, level: 'Beginner', videoId: 'QwSgyhSAJnc', description: 'Learn data structures and algorithms with clear explanations and practical examples.', price: 0, type: 'free' },
+                { id: 64, title: 'DSA by MicroDegree', instructor: 'MicroDegree ಕನ್ನಡ', category: 'Data Structures', rating: 4.5, students: 89000, duration: '10 weeks', lessons: 45, level: 'Beginner', videoId: 'VCePvdTel64', description: 'Data structures and algorithms course with practical implementations and examples.', price: 0, type: 'free' },
+                { id: 65, title: 'DSA by KnowledgeGATE', instructor: 'KnowledgeGATE by Sanchit Sir', category: 'Data Structures', rating: 4.7, students: 112000, duration: '12 weeks', lessons: 55, level: 'Intermediate', videoId: 'MdG0Vw9f1A4', description: 'Advanced data structures and algorithms with interview preparation focus.', price: 0, type: 'free' },
+                { id: 66, title: 'DSA by CodeHelp', instructor: 'CodeHelp by Babbar', category: 'Data Structures', rating: 4.8, students: 198000, duration: '14 weeks', lessons: 65, level: 'Intermediate', videoId: 'WQoB2z67hvY', description: 'Complete DSA course with problem-solving techniques and interview questions.', price: 0, type: 'free' },
+                { id: 67, title: 'DSA by WsCube', instructor: 'WsCube Tech', category: 'Data Structures', rating: 4.6, students: 98000, duration: '10 weeks', lessons: 45, level: 'Intermediate', videoId: 'mGJusQ7iBwc', description: 'Complete data structures and algorithms course with practical coding examples.', price: 0, type: 'free' },
+                { id: 68, title: 'DSA by Apna College', instructor: 'Apna College', category: 'Data Structures', rating: 4.9, students: 267000, duration: '14 weeks', lessons: 65, level: 'Beginner', videoId: 'VTLCoHnyACE', description: 'Complete data structures and algorithms bootcamp with real-world applications.', price: 0, type: 'free' },
+                { id: 69, title: 'DSA by Telusko', instructor: 'Telusko', category: 'Data Structures', rating: 4.8, students: 189000, duration: '12 weeks', lessons: 55, level: 'Intermediate', videoId: '4_HOnhB64Dg', description: 'Professional data structures and algorithms with industry best practices.', price: 0, type: 'free' }
+            ];
+        }
+
+        function loadPaidCourses() {
+            App.paidCourses = [
+                { id: 1001, title: 'Professional Python Masterclass', instructor: 'Shradha Khapra', category: 'Python', rating: 4.9, students: 45000, duration: '16 weeks', lessons: 85, level: 'Advanced', price: 4999, videoId: 't2_Q2BRzeEE', description: 'Advanced Python programming with real-world projects and certification.', type: 'paid' },
+                { id: 1002, title: 'Full Stack Web Development Pro', instructor: 'Apna College', category: 'Web Development', rating: 4.8, students: 38000, duration: '20 weeks', lessons: 120, level: 'Advanced', price: 6999, videoId: 'Vi9bxu-M-ag', description: 'Complete web development bootcamp with MERN stack and deployment.', type: 'paid' },
+                { id: 1003, title: 'Data Science & AI Certification', instructor: 'Intellipaat', category: 'Data Science', rating: 4.9, students: 28000, duration: '24 weeks', lessons: 150, level: 'Advanced', price: 8999, videoId: 'KZgd2UiapE0', description: 'Comprehensive data science with machine learning and AI specialization.', type: 'paid' },
+                { id: 1004, title: 'SAP S/4HANA Certification', instructor: 'ZaranTech', category: 'SAP', rating: 4.7, students: 15000, duration: '18 weeks', lessons: 95, level: 'Advanced', price: 12999, videoId: 'zF8S1Jp3hfE', description: 'Professional SAP S/4HANA certification with real-world implementation.', type: 'paid' },
+                { id: 1005, title: 'Advanced App Development with Flutter', instructor: 'Philipp Lackner', category: 'App Development', rating: 4.8, students: 22000, duration: '16 weeks', lessons: 90, level: 'Advanced', price: 5999, videoId: 'dzUc9vrsldM', description: 'Build professional mobile apps with Flutter and Dart.', type: 'paid' },
+                { id: 1006, title: 'AI & Deep Learning Specialization', instructor: 'Intellipaat', category: 'AI & ML', rating: 4.9, students: 19000, duration: '22 weeks', lessons: 130, level: 'Advanced', price: 10999, videoId: 'mULvGdqFKEY', description: 'Master AI, deep learning, and neural networks.', type: 'paid' },
+                { id: 1007, title: 'Advanced DSA for Interviews', instructor: 'CodeHelp by Babbar', category: 'Data Structures', rating: 4.9, students: 42000, duration: '14 weeks', lessons: 75, level: 'Advanced', price: 3999, videoId: 'WQoB2z67hvY', description: 'Crack coding interviews with advanced DSA concepts.', type: 'paid' },
+                { id: 1008, title: 'Cloud Computing & DevOps', instructor: 'Edureka', category: 'Web Development', rating: 4.7, students: 16000, duration: '18 weeks', lessons: 100, level: 'Advanced', price: 7999, videoId: 'xPh5ihBWang', description: 'Master cloud computing and DevOps practices.', type: 'paid' },
+                { id: 1009, title: 'Cybersecurity Professional', instructor: 'Simplilearn', category: 'AI & ML', rating: 4.6, students: 12000, duration: '20 weeks', lessons: 110, level: 'Advanced', price: 9999, videoId: 'QISvmiwOIYI', description: 'Comprehensive cybersecurity training and certification.', type: 'paid' },
+                { id: 1010, title: 'Blockchain Development', instructor: 'freeCodeCamp.org', category: 'App Development', rating: 4.5, students: 14000, duration: '16 weeks', lessons: 85, level: 'Advanced', price: 8499, videoId: 'dX8396ZmSPk', description: 'Build decentralized applications with blockchain.', type: 'paid' }
+            ];
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('onlineguru_theme') || 'light';
+            App.theme = savedTheme;
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+
+        function toggleTheme() {
+            App.theme = App.theme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', App.theme);
+            localStorage.setItem('onlineguru_theme', App.theme);
+            render();
+        }
+
+        function checkAuth() {
+            const userStr = localStorage.getItem('onlineguru_user');
+            if (userStr) {
+                try {
+                    const user = JSON.parse(userStr);
+                    App.user = user;
+                    loadUserData();
+                } catch (error) {
+                    console.error('Error loading user:', error);
+                    logout();
+                }
+            } else {
+                App.user = null;
+            }
+        }
+
+        function loadUserData() {
+            if (!App.user) return;
+            
+            const userId = App.user.id;
+            
+            const enrollmentsStr = localStorage.getItem('onlineguru_enrollments');
+            if (enrollmentsStr) {
+                const enrollments = JSON.parse(enrollmentsStr);
+                App.enrollments = enrollments[userId] || [];
+            } else {
+                App.enrollments = [];
+            }
+            
+            const purchasesStr = localStorage.getItem('onlineguru_purchases');
+            if (purchasesStr) {
+                const purchases = JSON.parse(purchasesStr);
+                App.purchases = purchases[userId] || [];
+            } else {
+                App.purchases = [];
+            }
+            
+            const progressStr = localStorage.getItem('onlineguru_progress');
+            if (progressStr) {
+                const progress = JSON.parse(progressStr);
+                App.progress = progress[userId] || {};
+            } else {
+                App.progress = {};
+            }
+            
+            const certsStr = localStorage.getItem('onlineguru_certificates');
+            if (certsStr) {
+                const certs = JSON.parse(certsStr);
+                App.certificates = certs[userId] || [];
+            } else {
+                App.certificates = [];
+            }
+            
+            const activitiesStr = localStorage.getItem('onlineguru_activities');
+            if (activitiesStr) {
+                const activities = JSON.parse(activitiesStr);
+                App.activities = activities[userId] || [];
+            } else {
+                App.activities = [];
+            }
+        }
+
+        function login(email, password) {
+            const users = JSON.parse(localStorage.getItem('onlineguru_users')) || [];
+            const user = users.find(u => u.email === email.toLowerCase().trim() && u.password === password);
+            
+            if (user) {
+                const userWithoutPassword = { ...user };
+                delete userWithoutPassword.password;
+                
+                App.user = userWithoutPassword;
+                localStorage.setItem('onlineguru_user', JSON.stringify(userWithoutPassword));
+                loadUserData();
+                addActivity('login', 'Logged into account');
+                showNotification(`Welcome back, ${user.name}!`, 'success');
+                navigateTo('dashboard');
+                render();
+                return true;
+            }
+            
+            showNotification('Invalid email or password', 'error');
+            return false;
+        }
+
+        function register(userData) {
+            const { name, email, phone, password, confirmPassword } = userData;
+            
+            if (!name || !email || !phone || !password || !confirmPassword) {
+                showNotification('All fields are required', 'error');
+                return false;
+            }
+            
+            if (password.length < 6) {
+                showNotification('Password must be at least 6 characters', 'error');
+                return false;
+            }
+            
+            if (password !== confirmPassword) {
+                showNotification('Passwords do not match', 'error');
+                return false;
+            }
+            
+            if (!/^\d{10}$/.test(phone)) {
+                showNotification('Please enter a valid 10-digit phone number', 'error');
+                return false;
+            }
+            
+            const users = JSON.parse(localStorage.getItem('onlineguru_users')) || [];
+            
+            if (users.find(u => u.email === email)) {
+                showNotification('Email already exists', 'error');
+                return false;
+            }
+            
+            const newUser = {
+                id: Date.now().toString(),
+                name: name.trim(),
+                email: email.toLowerCase().trim(),
+                phone: phone.trim(),
+                password: password,
+                createdAt: new Date().toISOString(),
+                settings: { notifications: 'all' }
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('onlineguru_users', JSON.stringify(users));
+            
+            showNotification('Registration successful! Please login.', 'success');
+            navigateTo('login');
+            render();
+            return true;
+        }
+
+        function logout() {
+            localStorage.removeItem('onlineguru_user');
+            App.user = null;
+            App.enrollments = [];
+            App.purchases = [];
+            App.progress = {};
+            App.certificates = [];
+            App.activities = [];
+            App.currentPage = 'home';
+            showNotification('Logged out successfully', 'success');
+            render();
+            window.scrollTo(0, 0);
+        }
+
+        function enrollInCourse(courseId) {
+            if (!App.user) {
+                showNotification('Please login to enroll', 'warning');
+                navigateTo('login');
+                return false;
+            }
+            
+            if (App.enrollments.includes(courseId)) {
+                showNotification('Already enrolled in this course', 'info');
+                return false;
+            }
+            
+            App.enrollments.push(courseId);
+            
+            const allEnrollments = JSON.parse(localStorage.getItem('onlineguru_enrollments')) || {};
+            allEnrollments[App.user.id] = App.enrollments;
+            localStorage.setItem('onlineguru_enrollments', JSON.stringify(allEnrollments));
+            
+            if (!App.progress[courseId]) {
+                App.progress[courseId] = {
+                    percentage: 0,
+                    completedLessons: 0,
+                    totalLessons: 10,
+                    lastAccessed: new Date().toISOString(),
+                    completedLessonsList: []
+                };
+            }
+            
+            const allProgress = JSON.parse(localStorage.getItem('onlineguru_progress')) || {};
+            allProgress[App.user.id] = App.progress;
+            localStorage.setItem('onlineguru_progress', JSON.stringify(allProgress));
+            
+            const allCourses = [...App.courses, ...App.paidCourses];
+            const course = allCourses.find(c => c.id === courseId);
+            addActivity('enrollment', `Enrolled in ${course.title}`);
+            showNotification('Enrolled successfully!', 'success');
+            
+            render();
+            return true;
+        }
+
+        function purchaseCourse(courseId, paymentDetails) {
+            if (!App.user) {
+                showNotification('Please login to purchase', 'warning');
+                navigateTo('login');
+                return false;
+            }
+            
+            const course = App.paidCourses.find(c => c.id === courseId);
+            if (!course) return false;
+            
+            if (App.purchases.some(p => p.courseId === courseId)) {
+                showNotification('Already purchased this course', 'info');
+                return false;
+            }
+            
+            const purchase = {
+                id: `PUR-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
+                courseId: courseId,
+                courseTitle: course.title,
+                amount: course.price,
+                paymentMethod: paymentDetails.paymentMethod,
+                paymentDate: new Date().toISOString(),
+                status: 'completed',
+                transactionId: `TXN${Date.now()}${Math.floor(Math.random() * 1000)}`,
+                bankDetails: {
+                    accountHolderName: paymentDetails.accountHolderName || App.user.name,
+                    bankName: paymentDetails.bankName || 'N/A',
+                    accountNumber: paymentDetails.accountNumber ? '****' + paymentDetails.accountNumber.slice(-4) : null,
+                    ifscCode: paymentDetails.ifscCode || 'N/A',
+                    upiId: paymentDetails.upiId || 'N/A'
+                }
+            };
+            
+            App.purchases.push(purchase);
+            
+            const allPurchases = JSON.parse(localStorage.getItem('onlineguru_purchases')) || {};
+            allPurchases[App.user.id] = App.purchases;
+            localStorage.setItem('onlineguru_purchases', JSON.stringify(allPurchases));
+            
+            if (!App.enrollments.includes(courseId)) {
+                App.enrollments.push(courseId);
+                const allEnrollments = JSON.parse(localStorage.getItem('onlineguru_enrollments')) || {};
+                allEnrollments[App.user.id] = App.enrollments;
+                localStorage.setItem('onlineguru_enrollments', JSON.stringify(allEnrollments));
+            }
+            
+            if (!App.progress[courseId]) {
+                App.progress[courseId] = {
+                    percentage: 0,
+                    completedLessons: 0,
+                    totalLessons: course.lessons || 10,
+                    lastAccessed: new Date().toISOString(),
+                    purchaseId: purchase.id,
+                    completedLessonsList: []
+                };
+                
+                const allProgress = JSON.parse(localStorage.getItem('onlineguru_progress')) || {};
+                allProgress[App.user.id] = App.progress;
+                localStorage.setItem('onlineguru_progress', JSON.stringify(allProgress));
+            }
+            
+            addActivity('purchase', `Purchased ${course.title} for ₹${course.price}`);
+            showNotification(`Payment successful! Course access granted.`, 'success');
+            
+            render();
+            return true;
+        }
+
+        function showPaymentModal(courseId) {
+            if (!App.user) {
+                showNotification('Please login to purchase', 'warning');
+                navigateTo('login');
+                return;
+            }
+            
+            const course = App.paidCourses.find(c => c.id === courseId);
+            if (!course) return;
+            
+            const existingModal = document.querySelector('.payment-modal');
+            if (existingModal) existingModal.remove();
+            
+            const modal = document.createElement('div');
+            modal.className = 'payment-modal';
+            modal.innerHTML = `
+                <div class="payment-modal-content">
+                    <div class="payment-modal-header">
+                        <i class="fas fa-lock"></i>
+                        <h2>Secure Payment</h2>
+                        <p>Complete your purchase</p>
+                    </div>
+                    
+                    <div class="payment-body">
+                        <div class="payment-summary">
+                            <h3 style="margin-bottom: 1rem;">Order Summary</h3>
+                            <div class="payment-summary-item">
+                                <span>${course.title}</span>
+                                <span>₹${course.price}</span>
+                            </div>
+                            <div class="payment-summary-item">
+                                <span>GST (18%)</span>
+                                <span>₹${Math.round(course.price * 0.18)}</span>
+                            </div>
+                            <div class="payment-summary-total">
+                                <span>Total Amount</span>
+                                <span>₹${Math.round(course.price * 1.18)}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-form">
+                            <div class="form-section">
+                                <h3><i class="fas fa-user"></i> Student Information</h3>
+                                <div class="form-group">
+                                    <label><i class="fas fa-user"></i> Full Name</label>
+                                    <input type="text" id="student-name" class="form-control" value="${App.user.name}" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-envelope"></i> Email</label>
+                                    <input type="email" id="student-email" class="form-control" value="${App.user.email}" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-phone"></i> Phone Number</label>
+                                    <input type="tel" id="student-phone" class="form-control" value="${App.user.phone || ''}" readonly>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h3><i class="fas fa-credit-card"></i> Payment Method</h3>
+                                <div class="payment-methods">
+                                    <div class="payment-method selected" onclick="selectPaymentMethod('bank')">
+                                        <i class="fas fa-university"></i>
+                                        <span>Bank Transfer</span>
+                                    </div>
+                                    <div class="payment-method" onclick="selectPaymentMethod('card')">
+                                        <i class="fas fa-credit-card"></i>
+                                        <span>Card</span>
+                                    </div>
+                                    <div class="payment-method" onclick="selectPaymentMethod('upi')">
+                                        <i class="fas fa-mobile-alt"></i>
+                                        <span>UPI</span>
+                                    </div>
+                                </div>
+                                
+                                <div id="bank-details" class="bank-details show">
+                                    <div class="form-group">
+                                        <label><i class="fas fa-user"></i> Account Holder Name</label>
+                                        <input type="text" id="account-holder" class="form-control" placeholder="As per bank records" value="${App.user.name}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label><i class="fas fa-university"></i> Bank Name</label>
+                                        <select id="bank-name" class="form-control">
+                                            <option value="">Select Bank</option>
+                                            <option value="SBI">State Bank of India</option>
+                                            <option value="HDFC">HDFC Bank</option>
+                                            <option value="ICICI">ICICI Bank</option>
+                                            <option value="Axis">Axis Bank</option>
+                                            <option value="Kotak">Kotak Mahindra Bank</option>
+                                            <option value="Other">Other Bank</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label><i class="fas fa-hashtag"></i> Account Number</label>
+                                        <input type="text" id="account-number" class="form-control" placeholder="Enter account number">
+                                    </div>
+                                    <div class="form-group">
+                                        <label><i class="fas fa-code"></i> Confirm Account Number</label>
+                                        <input type="text" id="confirm-account" class="form-control" placeholder="Re-enter account number">
+                                    </div>
+                                    <div class="form-group">
+                                        <label><i class="fas fa-code-branch"></i> IFSC Code</label>
+                                        <input type="text" id="ifsc-code" class="form-control" placeholder="e.g., SBIN0001234">
+                                    </div>
+                                </div>
+                                
+                                <div id="card-details" class="bank-details">
+                                    <div class="form-group">
+                                        <label><i class="fas fa-credit-card"></i> Card Number</label>
+                                        <input type="text" id="card-number" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19">
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group" style="flex:1; margin-right: 0.5rem;">
+                                            <label><i class="fas fa-calendar"></i> Expiry</label>
+                                            <input type="text" id="expiry" class="form-control" placeholder="MM/YY">
+                                        </div>
+                                        <div class="form-group" style="flex:1;">
+                                            <label><i class="fas fa-lock"></i> CVV</label>
+                                            <input type="password" id="cvv" class="form-control" placeholder="123" maxlength="3">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label><i class="fas fa-user"></i> Card Holder</label>
+                                        <input type="text" id="card-holder" class="form-control" placeholder="As on card" value="${App.user.name}">
+                                    </div>
+                                </div>
+                                
+                                <div id="upi-details" class="bank-details">
+                                    <div class="form-group">
+                                        <label><i class="fas fa-mobile-alt"></i> UPI ID</label>
+                                        <input type="text" id="upi-id" class="form-control" placeholder="e.g., username@okhdfcbank">
+                                    </div>
+                                    <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: var(--radius);">
+                                        <p style="margin-bottom: 0.5rem;">Or scan QR code with any UPI app</p>
+                                        <div style="width: 150px; height: 150px; margin: 0 auto; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; color: white;">
+                                            <i class="fas fa-qrcode" style="font-size: 3rem;"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-terms">
+                                <label>
+                                    <input type="checkbox" id="terms-agree" checked>
+                                    I agree to the Terms of Service and Privacy Policy
+                                </label>
+                            </div>
+                            
+                            <div class="payment-actions">
+                                <button type="button" class="btn btn-outline" onclick="this.closest('.payment-modal').remove()">
+                                    <i class="fas fa-times"></i> Cancel
+                                </button>
+                                <button type="button" class="btn btn-primary" onclick="processPayment(${courseId})">
+                                    <i class="fas fa-lock"></i> Pay ₹${Math.round(course.price * 1.18)}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        window.selectPaymentMethod = function(method) {
+            const methods = document.querySelectorAll('.payment-method');
+            methods.forEach(el => el.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            
+            document.querySelectorAll('.bank-details').forEach(el => el.classList.remove('show'));
+            
+            if (method === 'bank') {
+                document.getElementById('bank-details').classList.add('show');
+            } else if (method === 'card') {
+                document.getElementById('card-details').classList.add('show');
+            } else if (method === 'upi') {
+                document.getElementById('upi-details').classList.add('show');
+            }
+        };
+
+        window.processPayment = function(courseId) {
+            const course = App.paidCourses.find(c => c.id === courseId);
+            if (!course) return;
+            
+            if (!document.getElementById('terms-agree').checked) {
+                showNotification('Please agree to the terms and conditions', 'error');
+                return;
+            }
+            
+            const selectedMethod = document.querySelector('.payment-method.selected span').textContent.toLowerCase().trim();
+            
+            let paymentDetails = {
+                paymentMethod: selectedMethod,
+                accountHolderName: App.user.name
+            };
+            
+            if (selectedMethod.includes('bank')) {
+                const accountHolder = document.getElementById('account-holder').value;
+                const bankName = document.getElementById('bank-name').value;
+                const accountNumber = document.getElementById('account-number').value;
+                const confirmAccount = document.getElementById('confirm-account').value;
+                const ifscCode = document.getElementById('ifsc-code').value;
+                
+                if (!accountHolder || !bankName || !accountNumber || !ifscCode) {
+                    showNotification('Please fill all bank details', 'error');
+                    return;
+                }
+                
+                if (accountNumber !== confirmAccount) {
+                    showNotification('Account numbers do not match', 'error');
+                    return;
+                }
+                
+                if (accountNumber.length < 9 || accountNumber.length > 18) {
+                    showNotification('Please enter a valid account number', 'error');
+                    return;
+                }
+                
+                paymentDetails = {
+                    ...paymentDetails,
+                    accountHolderName: accountHolder,
+                    bankName: bankName,
+                    accountNumber: accountNumber,
+                    ifscCode: ifscCode.toUpperCase()
+                };
+                
+            } else if (selectedMethod.includes('card')) {
+                const cardNumber = document.getElementById('card-number').value.replace(/\s/g, '');
+                const expiry = document.getElementById('expiry').value;
+                const cvv = document.getElementById('cvv').value;
+                const cardHolder = document.getElementById('card-holder').value;
+                
+                if (!cardNumber || !expiry || !cvv || !cardHolder) {
+                    showNotification('Please fill all card details', 'error');
+                    return;
+                }
+                
+                if (cardNumber.length !== 16) {
+                    showNotification('Please enter a valid 16-digit card number', 'error');
+                    return;
+                }
+                
+                if (!/^\d{3}$/.test(cvv)) {
+                    showNotification('Please enter a valid CVV', 'error');
+                    return;
+                }
+                
+                paymentDetails = {
+                    ...paymentDetails,
+                    accountHolderName: cardHolder,
+                    cardNumber: cardNumber
+                };
+                
+            } else if (selectedMethod.includes('upi')) {
+                const upiId = document.getElementById('upi-id').value;
+                
+                if (!upiId) {
+                    showNotification('Please enter UPI ID', 'error');
+                    return;
+                }
+                
+                if (!/^[\w.-]+@[\w.-]+$/.test(upiId)) {
+                    showNotification('Please enter a valid UPI ID', 'error');
+                    return;
+                }
+                
+                paymentDetails = {
+                    ...paymentDetails,
+                    upiId: upiId
+                };
+            }
+            
+            purchaseCourse(courseId, paymentDetails);
+            document.querySelector('.payment-modal').remove();
+        };
+
+        function openCoursePlayer(courseId, lessonIndex = 0) {
+            console.log('Opening course player for course ID:', courseId);
+            const allCourses = [...App.courses, ...App.paidCourses];
+            const course = allCourses.find(c => c.id === courseId);
+            if (!course) {
+                console.error('Course not found:', courseId);
+                return;
+            }
+            
+            if (!App.enrollments.includes(courseId)) {
+                console.log('User not enrolled in course:', courseId);
+                showNotification('Please enroll/purchase first', 'warning');
+                return;
+            }
+            
+            console.log('Opening course:', course.title);
+            App.currentCourse = course;
+            App.currentLesson = lessonIndex;
+            App.currentPage = 'course-player';
+            render();
+        }
+
+        function markLessonComplete(courseId, lessonId) {
+            if (!App.user) {
+                showNotification('Please login to track progress', 'warning');
+                return;
+            }
+            
+            if (!App.progress[courseId]) {
+                App.progress[courseId] = {
+                    percentage: 0,
+                    completedLessons: 0,
+                    totalLessons: 10,
+                    completedLessonsList: []
+                };
+            }
+            
+            const progress = App.progress[courseId];
+            if (!progress.completedLessonsList.includes(lessonId)) {
+                progress.completedLessonsList.push(lessonId);
+                progress.completedLessons = progress.completedLessonsList.length;
+                progress.percentage = Math.round((progress.completedLessons / progress.totalLessons) * 100);
+                progress.lastAccessed = new Date().toISOString();
+                
+                const allProgress = JSON.parse(localStorage.getItem('onlineguru_progress')) || {};
+                allProgress[App.user.id] = App.progress;
+                localStorage.setItem('onlineguru_progress', JSON.stringify(allProgress));
+                
+                showNotification(`Lesson completed! Progress: ${progress.percentage}%`, 'success');
+                
+                if (progress.percentage >= 100) {
+                    generateCertificate(courseId);
+                }
+                
+                if (App.currentPage === 'course-player') {
+                    render();
+                }
+            }
+        }
+
+        function generateCertificate(courseId) {
+            const allCourses = [...App.courses, ...App.paidCourses];
+            const course = allCourses.find(c => c.id === courseId);
+            if (!course || !App.user) return null;
+            
+            if (App.certificates.some(c => c.courseId === courseId)) {
+                return null;
+            }
+            
+            const certificate = {
+                id: `CERT-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
+                userId: App.user.id,
+                userName: App.user.name,
+                courseId: courseId,
+                courseName: course.title,
+                instructor: course.instructor,
+                issueDate: new Date().toISOString(),
+                completionDate: new Date().toISOString().split('T')[0],
+                type: course.type === 'paid' ? 'Premium' : 'Standard'
+            };
+            
+            App.certificates.push(certificate);
+            
+            const allCerts = JSON.parse(localStorage.getItem('onlineguru_certificates')) || {};
+            allCerts[App.user.id] = App.certificates;
+            localStorage.setItem('onlineguru_certificates', JSON.stringify(allCerts));
+            
+            addActivity('completion', `Earned ${course.type} certificate for ${course.title}`);
+            showNotification('🎉 Congratulations! Course completed! Certificate earned!', 'success');
+            
+            return certificate;
+        }
+
+        function addActivity(type, description) {
+            if (!App.user) return;
+            
+            const activity = {
+                id: Date.now(),
+                type,
+                description,
+                timestamp: new Date().toISOString()
+            };
+            
+            App.activities = [activity, ...(App.activities || [])].slice(0, 50);
+            
+            const allActivities = JSON.parse(localStorage.getItem('onlineguru_activities')) || {};
+            allActivities[App.user.id] = App.activities;
+            localStorage.setItem('onlineguru_activities', JSON.stringify(allActivities));
+        }
+
+        function showNotification(message, type = 'info', duration = 3000) {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+                <button class="notification-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            document.body.appendChild(notification);
+            setTimeout(() => notification.classList.add('show'), 10);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, duration);
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function generateStars(rating) {
+            const fullStars = Math.floor(rating);
+            const hasHalf = rating % 1 >= 0.5;
+            let stars = '';
+            
+            for (let i = 0; i < fullStars; i++) stars += '<i class="fas fa-star"></i>';
+            if (hasHalf) stars += '<i class="fas fa-star-half-alt"></i>';
+            for (let i = fullStars + (hasHalf ? 1 : 0); i < 5; i++) stars += '<i class="far fa-star"></i>';
+            return stars;
+        }
+
+        function getYouTubeThumbnail(videoId) {
+            return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : 'https://via.placeholder.com/400x300?text=No+Video';
+        }
+
+        function navigateTo(page) {
+            App.currentPage = page;
+            
+            if (page === 'about' || page === 'dashboard' || page === 'course-player') {
+                document.body.className = '';
+                document.body.style.background = '#f8f9fa';
+            } else {
+                document.body.className = `page-${page}`;
+                document.body.style.background = '';
+            }
+            
+            render();
+            window.scrollTo(0, 0);
+        }
+
+        function setupEventListeners() {
+            document.addEventListener('click', function(e) {
+                const target = e.target;
+                
+                // Handle navigation links
+                if (target.matches('[data-page]') || target.closest('[data-page]')) {
+                    e.preventDefault();
+                    const page = target.closest('[data-page]').getAttribute('data-page');
+                    navigateTo(page);
+                }
+                
+                // Handle mobile toggle
+                if (target.matches('#mobile-toggle') || target.closest('#mobile-toggle')) {
+                    document.querySelector('.nav-links')?.classList.toggle('mobile-open');
+                }
+                
+                // Handle theme toggle
+                if (target.matches('#theme-toggle') || target.matches('#theme-toggle-user') || 
+                    target.closest('#theme-toggle') || target.closest('#theme-toggle-user')) {
+                    toggleTheme();
+                }
+                
+                // Handle logout button
+                if (target.matches('#logout-btn') || target.closest('#logout-btn')) {
+                    e.preventDefault();
+                    logout();
+                }
+                
+                // Handle purchase buttons
+                if (target.matches('[data-purchase]') || target.closest('[data-purchase]')) {
+                    e.preventDefault();
+                    const courseId = parseInt(target.closest('[data-purchase]').getAttribute('data-purchase'));
+                    showPaymentModal(courseId);
+                }
+                
+                // Handle course cards - FIXED: Now properly handles clicks on course cards and buttons
+                if (target.closest('[data-course]')) {
+                    e.preventDefault();
+                    const courseElement = target.closest('[data-course]');
+                    if (courseElement) {
+                        const courseId = parseInt(courseElement.getAttribute('data-course'));
+                        openCoursePlayer(courseId);
+                    }
+                }
+                
+                // Handle lesson clicks in playlist
+                if (target.matches('[data-lesson]') || target.closest('[data-lesson]')) {
+                    e.preventDefault();
+                    const lessonElement = target.closest('[data-lesson]');
+                    if (lessonElement && App.currentCourse) {
+                        const lessonId = parseInt(lessonElement.getAttribute('data-lesson'));
+                        App.currentLesson = lessonId - 1;
+                        render();
+                    }
+                }
+                
+                // Handle mark complete button
+                if (target.matches('[data-mark-complete]') || target.closest('[data-mark-complete]')) {
+                    e.preventDefault();
+                    if (App.currentCourse) {
+                        const lessonId = App.currentLesson + 1;
+                        markLessonComplete(App.currentCourse.id, lessonId);
+                    }
+                }
+            });
+            
+            // Handle form submissions
+            document.addEventListener('submit', function(e) {
+                if (e.target.id === 'login-form') {
+                    e.preventDefault();
+                    login(
+                        document.getElementById('login-email')?.value,
+                        document.getElementById('login-password')?.value
+                    );
+                }
+                
+                if (e.target.id === 'register-form') {
+                    e.preventDefault();
+                    register({
+                        name: document.getElementById('register-name')?.value,
+                        email: document.getElementById('register-email')?.value,
+                        phone: document.getElementById('register-phone')?.value,
+                        password: document.getElementById('register-password')?.value,
+                        confirmPassword: document.getElementById('register-confirm-password')?.value
+                    });
+                }
+                
+                if (e.target.id === 'contact-form') {
+                    e.preventDefault();
+                    showNotification('Message sent successfully!', 'success');
+                    e.target.reset();
+                }
+            });
+        }
+
+        function render() {
+            if (App.currentPage === 'about' || App.currentPage === 'dashboard' || App.currentPage === 'course-player') {
+                document.body.className = '';
+                document.body.style.background = '#f8f9fa';
+            } else {
+                document.body.className = `page-${App.currentPage}`;
+                document.body.style.background = '';
+            }
+            
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                ${renderHeader()}
+                <main class="main-content">
+                    ${renderPage()}
+                </main>
+                ${renderFooter()}
+            `;
+            
+            if (App.currentPage === 'courses' || App.currentPage === 'paid-courses') {
+                setTimeout(() => {
+                    setupCoursesFilters();
+                    setupCoursesSearch();
+                }, 100);
+            }
+        }
+
+        function renderHeader() {
+            return `
+                <header class="header">
+                    <div class="nav-container">
+                        <div class="logo" data-page="home">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>OnlineGuru</span>
+                        </div>
+                        
+                        <nav class="nav-links">
+                            <a href="#" data-page="home" class="${App.currentPage === 'home' ? 'active' : ''}">Home</a>
+                            <a href="#" data-page="about" class="${App.currentPage === 'about' ? 'active' : ''}">About</a>
+                            <a href="#" data-page="courses" class="${App.currentPage === 'courses' ? 'active' : ''}">Free Courses</a>
+                            <a href="#" data-page="paid-courses" class="${App.currentPage === 'paid-courses' ? 'active' : ''}">Premium Courses</a>
+                            <a href="#" data-page="contact" class="${App.currentPage === 'contact' ? 'active' : ''}">Contact</a>
+                        </nav>
+
+                        <div class="auth-buttons" style="display: ${App.user ? 'none' : 'flex'}">
+                            <button class="btn-icon" id="theme-toggle">
+                                <i class="fas ${App.theme === 'light' ? 'fa-moon' : 'fa-sun'}"></i>
+                            </button>
+                            <a href="#" data-page="login" class="btn btn-outline">Login</a>
+                            <a href="#" data-page="register" class="btn btn-primary">Sign Up</a>
+                        </div>
+
+                        <div class="user-menu" style="display: ${App.user ? 'flex' : 'none'}">
+                            <button class="btn-icon" id="theme-toggle-user">
+                                <i class="fas ${App.theme === 'light' ? 'fa-moon' : 'fa-sun'}"></i>
+                            </button>
+                            <a href="#" data-page="dashboard" class="btn btn-outline">
+                                <i class="fas fa-user-circle"></i> 
+                                <span>${App.user ? App.user.name.split(' ')[0] : 'User'}</span>
+                            </a>
+                            <a href="#" id="logout-btn" class="btn btn-primary">Logout</a>
+                        </div>
+
+                        <button class="mobile-toggle" id="mobile-toggle">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+                </header>
+            `;
+        }
+
+        function renderFooter() {
+            return `
+                <footer class="footer">
+                    <div class="footer-grid">
+                        <div class="footer-col">
+                            <div class="logo" data-page="home">
+                                <i class="fas fa-graduation-cap"></i> OnlineGuru
+                            </div>
+                            <p>Empowering learners worldwide.</p>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Quick Links</h4>
+                            <ul class="footer-links">
+                                <li><a href="#" data-page="home">Home</a></li>
+                                <li><a href="#" data-page="about">About</a></li>
+                                <li><a href="#" data-page="courses">Free Courses</a></li>
+                                <li><a href="#" data-page="paid-courses">Premium Courses</a></li>
+                                <li><a href="#" data-page="contact">Contact</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Payment Methods</h4>
+                            <ul class="footer-links">
+                                <li><i class="fas fa-university"></i> Bank Transfer</li>
+                                <li><i class="fas fa-credit-card"></i> Credit/Debit Card</li>
+                                <li><i class="fas fa-mobile-alt"></i> UPI</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p class="text-center">&copy; 2026 OnlineGuru. All payments are secure and encrypted.</p>
+                </footer>
+            `;
+        }
+
+        function renderPage() {
+            switch (App.currentPage) {
+                case 'home': return renderHome();
+                case 'about': return renderAbout();
+                case 'courses': return renderCourses();
+                case 'paid-courses': return renderPaidCourses();
+                case 'contact': return renderContact();
+                case 'login': return renderLogin();
+                case 'register': return renderRegister();
+                case 'dashboard': return App.user ? renderDashboard() : renderLogin();
+                case 'course-player': return App.currentCourse ? renderCoursePlayer() : renderHome();
+                default: return renderHome();
+            }
+        }
+
+        function renderHome() {
+            return `
+                <section class="hero">
+                    <div class="hero-content">
+                        <h1>Unlock Your Potential with OnlineGuru</h1>
+                        <p>Join 100,000+ learners mastering new skills with expert-led courses</p>
+                        <div class="hero-buttons">
+                            <a href="#" data-page="courses" class="btn btn-primary">Free Courses</a>
+                            <a href="#" data-page="paid-courses" class="btn btn-outline">Premium Courses</a>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="container">
+                    <h2>Why Choose OnlineGuru?</h2>
+                    <div class="grid">
+                        <div class="glass-card">
+                            <i class="fas fa-video"></i>
+                            <h3>100+ Free Courses</h3>
+                            <p>Learn from industry professionals at no cost</p>
+                        </div>
+                        <div class="glass-card">
+                            <i class="fas fa-crown"></i>
+                            <h3>Premium Certification</h3>
+                            <p>Advanced courses with professional certification</p>
+                        </div>
+                        <div class="glass-card">
+                            <i class="fas fa-lock"></i>
+                            <h3>Secure Payments</h3>
+                            <p>Multiple payment options with bank details protection</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="container">
+                    <h2>Featured Premium Courses</h2>
+                    <div class="courses-grid">
+                        ${App.paidCourses.slice(0, 3).map(course => renderCourseCard(course)).join('')}
+                    </div>
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <a href="#" data-page="paid-courses" class="btn btn-primary">View All Premium Courses</a>
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderAbout() {
+            return `
+                <section class="container">
+                    <div style="background: white; padding: 3rem; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
+                        <div style="text-align: center; margin-bottom: 4rem;">
+                            <div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 100px; height: 100px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem;">
+                                <i class="fas fa-graduation-cap" style="font-size: 3rem; color: white;"></i>
+                            </div>
+                            <h1 style="font-size: 3rem; color: var(--text-primary); margin-bottom: 1rem;">About OnlineGuru</h1>
+                            <p style="font-size: 1.2rem; color: var(--text-secondary); max-width: 800px; margin: 0 auto; line-height: 1.8;">
+                                Your gateway to world-class education with 100+ expert-led courses across 7 comprehensive categories. 
+                                We empower learners worldwide with interactive learning, real-time progress tracking, and professional certification.
+                            </p>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; margin-bottom: 4rem; text-align: center;">
+                            <div>
+                                <div style="font-size: 3rem; font-weight: 800; color: var(--primary); margin-bottom: 0.5rem;">100+</div>
+                                <div style="color: var(--text-secondary); font-weight: 600;">Free Courses</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 3rem; font-weight: 800; color: var(--primary); margin-bottom: 0.5rem;">10+</div>
+                                <div style="color: var(--text-secondary); font-weight: 600;">Premium Courses</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 3rem; font-weight: 800; color: var(--primary); margin-bottom: 0.5rem;">50k+</div>
+                                <div style="color: var(--text-secondary); font-weight: 600;">Active Students</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 3rem; font-weight: 800; color: var(--primary); margin-bottom: 0.5rem;">7</div>
+                                <div style="color: var(--text-secondary); font-weight: 600;">Categories</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderContact() {
+            return `
+                <section class="container">
+                    <div style="max-width: 800px; margin: 2rem auto; background: white; padding: 3rem; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
+                        <div style="text-align: center; margin-bottom: 3rem;">
+                            <div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                                <i class="fas fa-envelope" style="font-size: 2rem; color: white;"></i>
+                            </div>
+                            <h1 style="font-size: 2.5rem; color: var(--text-primary); margin-bottom: 0.5rem;">Contact Us</h1>
+                            <p style="color: var(--text-secondary); font-size: 1.1rem;">We'd love to hear from you! Send us a message and we'll respond as soon as possible.</p>
+                        </div>
+
+                        <form id="contact-form" style="max-width: 600px; margin: 0 auto;">
+                            <div style="margin-bottom: 1.5rem;">
+                                <label for="contact-name" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Your Name</label>
+                                <div style="position: relative;">
+                                    <i class="fas fa-user" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--primary);"></i>
+                                    <input type="text" id="contact-name" class="form-control" placeholder="John Doe" required style="padding-left: 45px;">
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom: 1.5rem;">
+                                <label for="contact-email" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Your Email</label>
+                                <div style="position: relative;">
+                                    <i class="fas fa-envelope" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--primary);"></i>
+                                    <input type="email" id="contact-email" class="form-control" placeholder="john@example.com" required style="padding-left: 45px;">
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom: 2rem;">
+                                <label for="contact-message" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Your Message</label>
+                                <div style="position: relative;">
+                                    <i class="fas fa-comment" style="position: absolute; left: 15px; top: 20px; color: var(--primary);"></i>
+                                    <textarea id="contact-message" class="form-control" rows="6" placeholder="Type your message here..." required style="padding-left: 45px; resize: vertical;"></textarea>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
+                                <i class="fas fa-paper-plane"></i> Send Message
+                            </button>
+                        </form>
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderLogin() {
+            return `
+                <section class="container">
+                    <div class="auth-form">
+                        <h2>Welcome Back</h2>
+                        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">Please enter your credentials to login</p>
+                        
+                        <form id="login-form">
+                            <div class="form-group">
+                                <label for="login-email">
+                                    <i class="fas fa-envelope" style="margin-right: 8px; color: var(--primary);"></i>
+                                    Email Address
+                                </label>
+                                <input type="email" id="login-email" class="form-control" 
+                                       placeholder="Enter your email" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="login-password">
+                                    <i class="fas fa-lock" style="margin-right: 8px; color: var(--primary);"></i>
+                                    Password
+                                </label>
+                                <input type="password" id="login-password" class="form-control" 
+                                       placeholder="Enter your password" required>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1.1rem;">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </button>
+                        </form>
+                        
+                        <p class="auth-link">
+                            Don't have an account? <a href="#" data-page="register" style="color: var(--primary); font-weight: 600;">Create one here</a>
+                        </p>
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderRegister() {
+            return `
+                <section class="container">
+                    <div class="auth-form">
+                        <h2>Create Account</h2>
+                        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">Fill in your details to get started</p>
+                        
+                        <form id="register-form">
+                            <div class="form-group">
+                                <label for="register-name">
+                                    <i class="fas fa-user" style="margin-right: 8px; color: var(--primary);"></i>
+                                    Full Name
+                                </label>
+                                <input type="text" id="register-name" class="form-control" 
+                                       placeholder="Enter your full name" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="register-email">
+                                    <i class="fas fa-envelope" style="margin-right: 8px; color: var(--primary);"></i>
+                                    Email Address
+                                </label>
+                                <input type="email" id="register-email" class="form-control" 
+                                       placeholder="Enter your email" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="register-phone">
+                                    <i class="fas fa-phone" style="margin-right: 8px; color: var(--primary);"></i>
+                                    Phone Number
+                                </label>
+                                <input type="tel" id="register-phone" class="form-control" 
+                                       placeholder="10-digit phone number" pattern="[0-9]{10}" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="register-password">
+                                    <i class="fas fa-lock" style="margin-right: 8px; color: var(--primary);"></i>
+                                    Password
+                                </label>
+                                <input type="password" id="register-password" class="form-control" 
+                                       placeholder="Minimum 6 characters" minlength="6" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="register-confirm-password">
+                                    <i class="fas fa-check-circle" style="margin-right: 8px; color: var(--primary);"></i>
+                                    Confirm Password
+                                </label>
+                                <input type="password" id="register-confirm-password" class="form-control" 
+                                       placeholder="Re-enter password" minlength="6" required>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1.1rem; margin-top: 1rem;">
+                                <i class="fas fa-user-plus"></i> Create Account
+                            </button>
+                        </form>
+                        
+                        <p class="auth-link">
+                            Already have an account? <a href="#" data-page="login" style="color: var(--primary); font-weight: 600;">Login here</a>
+                        </p>
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderCourses() {
+            return `
+                <section class="container">
+                    <h1 style="text-align: center; font-size: 2.5rem;">Free Courses</h1>
+                    <p style="text-align: center; margin-bottom: 2rem;">Choose from 100+ expert-led free courses</p>
+
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">All Courses</button>
+                        <button class="filter-btn" data-filter="Python">Python</button>
+                        <button class="filter-btn" data-filter="Web Development">Web Dev</button>
+                        <button class="filter-btn" data-filter="Data Science">Data Science</button>
+                        <button class="filter-btn" data-filter="SAP">SAP</button>
+                        <button class="filter-btn" data-filter="App Development">App Dev</button>
+                        <button class="filter-btn" data-filter="AI & ML">AI & ML</button>
+                        <button class="filter-btn" data-filter="Data Structures">DSA</button>
+                    </div>
+
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-courses" class="form-control" placeholder="Search free courses...">
+                    </div>
+
+                    <div class="courses-grid" id="courses-grid">
+                        ${App.courses.map(course => renderCourseCard(course)).join('')}
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderPaidCourses() {
+            return `
+                <section class="container">
+                    <h1 style="text-align: center; font-size: 2.5rem;">Premium Courses</h1>
+                    <p style="text-align: center; margin-bottom: 2rem;">Advanced courses with professional certification</p>
+
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">All Courses</button>
+                        <button class="filter-btn" data-filter="Python">Python</button>
+                        <button class="filter-btn" data-filter="Web Development">Web Dev</button>
+                        <button class="filter-btn" data-filter="Data Science">Data Science</button>
+                        <button class="filter-btn" data-filter="SAP">SAP</button>
+                        <button class="filter-btn" data-filter="App Development">App Dev</button>
+                        <button class="filter-btn" data-filter="AI & ML">AI & ML</button>
+                        <button class="filter-btn" data-filter="Data Structures">DSA</button>
+                    </div>
+
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-courses" class="form-control" placeholder="Search premium courses...">
+                    </div>
+
+                    <div class="courses-grid" id="courses-grid">
+                        ${App.paidCourses.map(course => renderCourseCard(course)).join('')}
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderCourseCard(course) {
+            const isEnrolled = App.enrollments?.includes(course.id);
+            const isPaid = course.type === 'paid';
+            const isPurchased = App.purchases?.some(p => p.courseId === course.id);
+            const hasAccess = isEnrolled || isPurchased;
+            
+            return `
+                <div class="course-card" data-course="${course.id}">
+                    <div class="course-thumbnail">
+                        <img src="${getYouTubeThumbnail(course.videoId)}" alt="${course.title}" loading="lazy">
+                        ${isPaid ? '<span class="paid-badge"><i class="fas fa-crown"></i> PREMIUM</span>' : ''}
+                        <span class="playlist-badge"><i class="fas fa-list"></i> ${course.lessons} Lessons</span>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-category">${course.category}</span>
+                        <h3 class="course-title">${course.title}</h3>
+                        <div class="course-instructor">
+                            <i class="fas fa-chalkboard-teacher"></i> ${course.instructor}
+                        </div>
+                        <div class="course-meta">
+                            <div class="stars">${generateStars(course.rating)}</div>
+                            <span class="course-level">${course.level}</span>
+                        </div>
+                        ${isPaid ? `
+                            <div class="course-price">
+                                ₹${course.price} <small>+18% GST</small>
+                            </div>
+                        ` : ''}
+                        <div class="course-footer">
+                            <div class="course-duration">
+                                <i class="far fa-clock"></i> ${course.duration}
+                            </div>
+                            ${!hasAccess ? `
+                                ${isPaid ? `
+                                    <button class="purchase-btn" data-purchase="${course.id}">
+                                        <i class="fas fa-shopping-cart"></i> Buy Now
+                                    </button>
+                                ` : `
+                                    <button class="btn btn-primary" onclick="enrollInCourse(${course.id})">
+                                        <i class="fas fa-plus"></i> Enroll
+                                    </button>
+                                `}
+                            ` : `
+                                <span style="color: var(--success); font-size: 0.85rem;">
+                                    <i class="fas fa-check-circle"></i> Enrolled
+                                </span>
+                            `}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderCoursePlayer() {
+            if (!App.currentCourse) return '';
+            
+            const course = App.currentCourse;
+            const currentLesson = App.currentLesson;
+            const lesson = App.lessons[currentLesson] || App.lessons[0];
+            const progress = App.progress[course.id] || { completedLessonsList: [], percentage: 0, completedLessons: 0, totalLessons: 10 };
+            const isCompleted = progress.completedLessonsList.includes(currentLesson + 1);
+            
+            return `
+                <div class="course-player-container">
+                    <button class="back-btn" onclick="navigateTo('dashboard')">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </button>
+                    
+                    <div class="course-player-grid">
+                        <div class="video-section">
+                            <div class="video-wrapper">
+                                <iframe src="https://www.youtube.com/embed/${course.videoId}?autoplay=1" allowfullscreen></iframe>
+                            </div>
+                            
+                            <div class="course-info">
+                                <h1>${course.title}</h1>
+                                <div class="instructor">
+                                    <i class="fas fa-chalkboard-teacher"></i> ${course.instructor}
+                                </div>
+                                <p class="description">${course.description}</p>
+                            </div>
+                            
+                            <div class="progress-info">
+                                <div class="progress-header">
+                                    <h3>Course Progress</h3>
+                                    <span class="progress-percentage">${progress.percentage}% Complete</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${progress.percentage}%"></div>
+                                </div>
+                                <div class="progress-stats">
+                                    <span><i class="fas fa-check-circle"></i> ${progress.completedLessons} of ${progress.totalLessons} lessons completed</span>
+                                </div>
+                            </div>
+                            
+                            <button class="mark-complete-btn" data-mark-complete ${isCompleted ? 'disabled' : ''}>
+                                <i class="fas ${isCompleted ? 'fa-check-circle' : 'fa-check-circle'}"></i>
+                                ${isCompleted ? 'Lesson Completed' : 'Mark Current Lesson Complete'}
+                            </button>
+                        </div>
+                        
+                        <div class="playlist-section">
+                            <div class="playlist-header">
+                                <h3>
+                                    <i class="fas fa-list"></i>
+                                    Course Content
+                                </h3>
+                                <p>${App.lessons.length} lessons</p>
+                            </div>
+                            <div class="playlist-items">
+                                ${App.lessons.map((l, index) => {
+                                    const isActive = index === currentLesson;
+                                    const isLessonCompleted = progress.completedLessonsList.includes(index + 1);
+                                    return `
+                                        <div class="playlist-item ${isLessonCompleted ? 'completed' : ''} ${isActive ? 'active' : ''}" data-lesson="${index + 1}">
+                                            <div class="playlist-item-number">${index + 1}</div>
+                                            <div class="playlist-item-info">
+                                                <h4>${l.title}</h4>
+                                                <p>${l.description}</p>
+                                            </div>
+                                            <div class="playlist-item-duration">
+                                                <i class="far fa-clock"></i> ${l.duration}
+                                            </div>
+                                            ${isLessonCompleted ? '<div class="playlist-item-status"><i class="fas fa-check-circle"></i></div>' : ''}
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderDashboard() {
+            if (!App.user) {
+                navigateTo('login');
+                return renderLogin();
+            }
+            
+            const allCourses = [...App.courses, ...App.paidCourses];
+            const enrolledCourses = allCourses.filter(c => App.enrollments?.includes(c.id));
+            
+            const totalCourses = enrolledCourses.length;
+            const freeCourses = enrolledCourses.filter(c => c.type === 'free').length;
+            const paidCoursesCount = enrolledCourses.filter(c => c.type === 'paid').length;
+            const completedCourses = App.certificates.length;
+            const totalLessonsCompleted = Object.values(App.progress).reduce((acc, curr) => acc + (curr.completedLessons || 0), 0);
+            const totalSpent = App.purchases.reduce((acc, curr) => acc + curr.amount, 0);
+            
+            return `
+                <div class="dashboard-grid">
+                    <aside class="dashboard-sidebar">
+                        <div class="sidebar-header">
+                            <div class="user-avatar-large">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <h3>${App.user.name}</h3>
+                            <p>${App.user.email}</p>
+                        </div>
+                        <nav class="sidebar-nav">
+                            <button class="nav-item active" onclick="showDashboardSection('overview', event)">
+                                <i class="fas fa-th-large"></i> Overview
+                            </button>
+                            <button class="nav-item" onclick="showDashboardSection('courses', event)">
+                                <i class="fas fa-book-open"></i> My Free Courses
+                                <span class="nav-badge">${freeCourses}</span>
+                            </button>
+                            <button class="nav-item" onclick="showDashboardSection('purchases', event)">
+                                <i class="fas fa-shopping-bag"></i> Premium Courses
+                                <span class="nav-badge">${paidCoursesCount}</span>
+                            </button>
+                        </nav>
+                    </aside>
+
+                    <main class="dashboard-content">
+                        <section id="overview-section" class="content-section active">
+                            <div class="section-header">
+                                <h1>Welcome back, ${App.user.name.split(' ')[0]}!</h1>
+                                <p>Here's your learning progress overview</p>
+                            </div>
+                            
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-book-open"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3>${totalCourses}</h3>
+                                        <p>Enrolled Courses</p>
+                                        <small>${freeCourses} Free · ${paidCoursesCount} Premium</small>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-trophy"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3>${completedCourses}</h3>
+                                        <p>Completed</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3>${totalLessonsCompleted}</h3>
+                                        <p>Lessons Done</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-rupee-sign"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3>₹${totalSpent}</h3>
+                                        <p>Total Spent</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h3 style="margin: 2rem 0 1rem;">Recent Activity</h3>
+                            <div class="activity-feed">
+                                ${App.activities?.length > 0 ? 
+                                    App.activities.slice(0, 5).map(activity => `
+                                        <div class="feed-item">
+                                            <div class="feed-icon">
+                                                <i class="fas fa-${activity.type === 'enrollment' ? 'graduation-cap' : activity.type === 'purchase' ? 'shopping-cart' : activity.type === 'completion' ? 'trophy' : 'clock'}"></i>
+                                            </div>
+                                            <div class="feed-content">
+                                                <p>${activity.description}</p>
+                                                <span class="feed-time">${new Date(activity.timestamp).toLocaleDateString()}</span>
+                                            </div>
+                                        </div>
+                                    `).join('') 
+                                    : '<p style="text-align: center; color: var(--text-muted);">No recent activity</p>'}
+                            </div>
+                        </section>
+
+                        <section id="courses-section" class="content-section">
+                            <div class="section-header">
+                                <h1>My Free Courses</h1>
+                                <p>Your enrolled free courses</p>
+                            </div>
+                            ${enrolledCourses.filter(c => c.type === 'free').length > 0 ? `
+                                <div class="courses-grid">
+                                    ${enrolledCourses.filter(c => c.type === 'free').map(course => `
+                                        <div class="course-card" data-course="${course.id}">
+                                            <div class="course-thumbnail">
+                                                <img src="${getYouTubeThumbnail(course.videoId)}" alt="${course.title}">
+                                                <span class="playlist-badge"><i class="fas fa-list"></i> ${course.lessons} Lessons</span>
+                                            </div>
+                                            <div class="course-content">
+                                                <h3 class="course-title">${course.title}</h3>
+                                                <p style="color: var(--text-secondary); font-size: 0.9rem;">${course.instructor}</p>
+                                                <div style="display: flex; justify-content: space-between; margin: 0.5rem 0;">
+                                                    <span>Progress</span>
+                                                    <span>${App.progress[course.id]?.percentage || 0}%</span>
+                                                </div>
+                                                <div class="progress-bar">
+                                                    <div class="progress-fill" style="width: ${App.progress[course.id]?.percentage || 0}%"></div>
+                                                </div>
+                                                <button class="btn btn-primary" style="width:100%; margin-top: 1rem;" data-course="${course.id}">
+                                                    <i class="fas fa-play"></i> Continue Learning
+                                                </button>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : '<p style="text-align: center; padding: 2rem;">No free courses yet. <a href="#" data-page="courses">Browse free courses</a></p>'}
+                        </section>
+
+                        <section id="purchases-section" class="content-section">
+                            <div class="section-header">
+                                <h1>Premium Courses</h1>
+                                <p>Your purchased premium courses</p>
+                            </div>
+                            ${enrolledCourses.filter(c => c.type === 'paid').length > 0 ? `
+                                <div class="courses-grid">
+                                    ${enrolledCourses.filter(c => c.type === 'paid').map(course => `
+                                        <div class="course-card" data-course="${course.id}">
+                                            <div class="course-thumbnail">
+                                                <img src="${getYouTubeThumbnail(course.videoId)}" alt="${course.title}">
+                                                <span class="paid-badge"><i class="fas fa-crown"></i> PREMIUM</span>
+                                                <span class="playlist-badge"><i class="fas fa-list"></i> ${course.lessons} Lessons</span>
+                                            </div>
+                                            <div class="course-content">
+                                                <h3 class="course-title">${course.title}</h3>
+                                                <p style="color: var(--text-secondary); font-size: 0.9rem;">${course.instructor}</p>
+                                                <div style="display: flex; justify-content: space-between; margin: 0.5rem 0;">
+                                                    <span>Progress</span>
+                                                    <span>${App.progress[course.id]?.percentage || 0}%</span>
+                                                </div>
+                                                <div class="progress-bar">
+                                                    <div class="progress-fill" style="width: ${App.progress[course.id]?.percentage || 0}%"></div>
+                                                </div>
+                                                <button class="btn btn-primary" style="width:100%; margin-top: 1rem;" data-course="${course.id}">
+                                                    <i class="fas fa-play"></i> Continue Learning
+                                                </button>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : '<p style="text-align: center; padding: 2rem;">No premium courses yet. <a href="#" data-page="paid-courses">Browse premium courses</a></p>'}
+                            
+                            ${App.purchases.length > 0 ? `
+                                <h2 style="margin: 3rem 0 1.5rem;">Purchase History</h2>
+                                <div class="purchase-history">
+                                    ${App.purchases.map(purchase => {
+                                        const course = allCourses.find(c => c.id === purchase.courseId);
+                                        return `
+                                            <div class="purchase-item" data-course="${purchase.courseId}">
+                                                <div class="purchase-icon">
+                                                    <i class="fas fa-receipt"></i>
+                                                </div>
+                                                <div class="purchase-details">
+                                                    <h4>${purchase.courseTitle}</h4>
+                                                    <div class="purchase-meta">
+                                                        <span><i class="fas fa-hashtag"></i> ${purchase.transactionId}</span>
+                                                        <span><i class="far fa-calendar"></i> ${formatDate(purchase.paymentDate)}</span>
+                                                        <span><i class="fas fa-credit-card"></i> ${purchase.paymentMethod}</span>
+                                                    </div>
+                                                </div>
+                                                <div style="text-align: right;">
+                                                    <div class="purchase-amount">₹${purchase.amount}</div>
+                                                    <span class="purchase-status status-success">Completed</span>
+                                                </div>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            ` : ''}
+                        </section>
+                    </main>
+                </div>
+            `;
+        }
+
+        function showDashboardSection(section, event) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(`${section}-section`).classList.add('active');
+        }
+
+        function setupCoursesFilters() {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    filterCourses(this.dataset.filter);
+                });
+            });
+        }
+
+        function filterCourses(filter) {
+            let courses = App.currentPage === 'paid-courses' ? App.paidCourses : App.courses;
+            
+            const filtered = filter === 'all' 
+                ? courses 
+                : courses.filter(c => c.category === filter);
+            
+            const grid = document.getElementById('courses-grid');
+            if (grid) grid.innerHTML = filtered.map(c => renderCourseCard(c)).join('');
+        }
+
+        function setupCoursesSearch() {
+            document.getElementById('search-courses')?.addEventListener('input', function(e) {
+                const query = e.target.value.toLowerCase();
+                let courses = App.currentPage === 'paid-courses' ? App.paidCourses : App.courses;
+                
+                if (query.length < 2) {
+                    filterCourses(document.querySelector('.filter-btn.active')?.dataset.filter || 'all');
+                    return;
+                }
+                
+                const filtered = courses.filter(c => 
+                    c.title.toLowerCase().includes(query) || 
+                    c.instructor.toLowerCase().includes(query)
+                );
+                
+                document.getElementById('courses-grid').innerHTML = filtered.map(c => renderCourseCard(c)).join('');
+            });
+        }
+
+        // Make functions globally available
+        window.enrollInCourse = enrollInCourse;
+        window.openCoursePlayer = openCoursePlayer;
+        window.showDashboardSection = showDashboardSection;
+        window.processPayment = processPayment;
+        window.selectPaymentMethod = selectPaymentMethod;
+        window.markLessonComplete = markLessonComplete;
+        window.navigateTo = navigateTo;
+    </script>
+
+    <!-- ======================================== -->
+    <!-- CHATBOT IMPLEMENTATION - ADDED AT THE END -->
+    <!-- ======================================== -->
+    <script>
+        // ========================================
+        // CHATGPT-LIKE AI ASSISTANT WITH GEMINI API
+        // ========================================
+        
+        // Gemini API Configuration
+        const GEMINI_API_KEY = 'AIzaSyBemlYyeT7wCloXv56VTDyNO_AtoVZn0ZI';
+        const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+        
+        // Chat state
+        let chatMessages = [];
+        let isChatOpen = false;
+        let isTyping = false;
+        
+        // Initialize chat when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeChat();
+        });
+        
+        function initializeChat() {
+            // Add welcome message after a short delay
+            setTimeout(() => {
+                addChatMessage('bot', '👋 Hello! I\'m your AI assistant powered by Google Gemini. I can help you with anything - general knowledge, programming, science, history, math, or course recommendations. What would you like to know?');
+                updateChatUI();
+            }, 2000);
+        }
+        
+        async function sendToGemini(userMessage) {
+            try {
+                const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: `You are a helpful AI assistant for OnlineGuru learning platform. You can answer any question - general knowledge, programming, science, math, history, or course-related. Be friendly, detailed, and helpful. Keep responses clear and well-structured.
+
+User: ${userMessage}
+
+Assistant:`
+                            }]
+                        }],
+                        generationConfig: {
+                            temperature: 0.7,
+                            maxOutputTokens: 800,
+                            topP: 0.9,
+                            topK: 40
+                        }
+                    })
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error?.message || 'API request failed');
+                }
+                
+                const data = await response.json();
+                
+                if (data.candidates && data.candidates[0] && data.candidates[0].content) {
+                    return data.candidates[0].content.parts[0].text;
+                } else {
+                    throw new Error('Invalid response format');
+                }
+            } catch (error) {
+                console.error('Gemini API Error:', error);
+                return "I apologize, but I'm having trouble connecting right now. Please check your internet connection and try again. If the problem persists, please try again later.";
+            }
+        }
+        
+        async function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Clear input and disable
+            input.value = '';
+            input.disabled = true;
+            
+            // Add user message to chat
+            addChatMessage('user', message);
+            updateChatUI();
+            
+            // Show typing indicator
+            isTyping = true;
+            updateChatUI();
+            
+            // Get AI response
+            const aiResponse = await sendToGemini(message);
+            
+            // Hide typing indicator and add response
+            isTyping = false;
+            addChatMessage('bot', aiResponse);
+            updateChatUI();
+            
+            // Re-enable input
+            input.disabled = false;
+            input.focus();
+        }
+        
+        function addChatMessage(role, content) {
+            chatMessages.push({
+                id: Date.now(),
+                role: role,
+                content: content,
+                timestamp: new Date()
+            });
+            // Limit chat history to last 50 messages
+            if (chatMessages.length > 50) {
+                chatMessages = chatMessages.slice(-50);
+            }
+        }
+        
+        function updateChatUI() {
+            const messagesContainer = document.getElementById('chat-messages');
+            if (!messagesContainer) return;
+            
+            messagesContainer.innerHTML = chatMessages.map(msg => `
+                <div class="message ${msg.role}">
+                    <div class="message-avatar">
+                        <i class="fas ${msg.role === 'user' ? 'fa-user' : 'fa-robot'}"></i>
+                    </div>
+                    <div class="message-content">
+                        ${formatChatMessage(msg.content)}
+                    </div>
+                </div>
+            `).join('');
+            
+            if (isTyping) {
+                messagesContainer.innerHTML += `
+                    <div class="message bot">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="typing-indicator">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        function formatChatMessage(content) {
+            // Format markdown-style content
+            return content
+                .replace(/\n/g, '<br>')
+                .replace(/```([\s\S]*?)```/g, '<pre style="background: var(--bg-tertiary); padding: 0.75rem; border-radius: var(--radius); overflow-x: auto; margin: 0.5rem 0;"><code>$1</code></pre>')
+                .replace(/`([^`]+)`/g, '<code style="background: var(--bg-tertiary); padding: 0.2rem 0.4rem; border-radius: var(--radius-sm);">$1</code>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/^# (.*?)$/gm, '<h4 style="margin: 0.5rem 0;">$1</h4>')
+                .replace(/^## (.*?)$/gm, '<h5 style="margin: 0.5rem 0;">$1</h5>')
+                .replace(/^### (.*?)$/gm, '<h6 style="margin: 0.5rem 0;">$1</h6>');
+        }
+        
+        function toggleChat() {
+            isChatOpen = !isChatOpen;
+            const chatWindow = document.getElementById('chatbot-window');
+            if (chatWindow) {
+                chatWindow.classList.toggle('open');
+            }
+        }
+        
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendChatMessage();
+            }
+        }
+        
+        // Add chat HTML to the page
+        function addChatHTML() {
+            const chatHTML = `
+                <button class="chatbot-btn" onclick="toggleChat()">
+                    <i class="fas fa-robot"></i>
+                </button>
+                
+                <div id="chatbot-window" class="chatbot-window">
+                    <div class="chatbot-header">
+                        <h3>
+                            <i class="fas fa-robot"></i>
+                            AI Assistant
+                            <small style="font-size: 0.7rem; margin-left: 0.5rem;">(Gemini AI)</small>
+                        </h3>
+                        <button class="close-chat" onclick="toggleChat()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div id="chat-messages" class="chat-messages">
+                        <!-- Messages will appear here -->
+                    </div>
+                    
+                    <div class="chat-input-area">
+                        <textarea id="chat-input" class="chat-input" rows="2" placeholder="Ask me anything... (Press Enter to send)" onkeypress="handleChatKeyPress(event)"></textarea>
+                        <button class="send-btn" onclick="sendChatMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', chatHTML);
+        }
+        
+        // Add chat HTML when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', addChatHTML);
+        } else {
+            addChatHTML();
+        }
+        
+        // Make functions globally available
+        window.toggleChat = toggleChat;
+        window.sendChatMessage = sendChatMessage;
+        window.handleChatKeyPress = handleChatKeyPress;
+    </script>
+</body>
+</html>
